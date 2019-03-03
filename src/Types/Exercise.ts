@@ -1,9 +1,9 @@
 import { Actions } from 'constants/Exercise';
-import { Exercises } from './User';
+import { ProgramSchemaLayout } from './Program';
 
-export interface ExerciseState extends Exercises { }
+export type ExerciseState = ProgramSchemaLayout;
 
 export interface ExerciseAction {
   type: Actions;
-  payload: Exercises[];
+  payload: ProgramSchemaLayout[];
 }

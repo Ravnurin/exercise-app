@@ -6,7 +6,7 @@ export const lowerBody = {
       type: String
     }
   },
-  RdlOrLegCurl: {
+  rdlOrLegCurl: {
     type: Array,
     default: [],
     alternative: {

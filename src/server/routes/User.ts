@@ -6,7 +6,6 @@ import passport from 'passport';
 import validateLoginInput from '../validation/user';
 import validateRegisterInput from '../validation/registration';
 import User from '../models/User';
-import { ErrorState } from '../../Types/Errors';
 
 enum HttpStatusCode {
   ClientError = 400
@@ -102,18 +101,6 @@ router.post('/login', (req, res) => {
         return res.status(HttpStatusCode.ClientError).json(errors);
       }
     });
-  });
-});
-
-router.post('/exercises', (req, res) => {
-  User.findOne({ username: req.body.username }).then((user: any) => {
-    const errors = {} as ErrorState;
-
-    if (!user) {
-      errors.username = 'User not found';
-      return res.status(HttpStatusCode.ClientError);
-    }
-    return res.json(user.exercises);
   });
 });
 

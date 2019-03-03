@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import passport from 'passport';
 
 import users from './routes/User';
+import exercises from './routes/Exercise';
 import DB from './database/db';
 import PassportInstance from './passport';
 
@@ -21,6 +22,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use('/api/users', users);
+app.use('/api/exercises', exercises);
 
 app.get('/', (_req, res) => {
   res.send('Hello');

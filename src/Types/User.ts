@@ -1,5 +1,4 @@
-import { upperBody } from '../server/models/Program/UpperBody';
-import { lowerBody } from '../server/models/Program/LowerBody';
+import { ProgramSchemaLayout } from './Program';
 
 export interface BasicUser {
   username: string;
@@ -12,11 +11,5 @@ export interface SecureUser extends BasicUser {
 export interface UserModel extends BasicUser, SecureUser {
   _id: string;
   date: Date;
-  exercises: Exercises;
-}
-
-export interface Exercises {
-  date: Date;
-  upperBody: typeof upperBody;
-  lowerBody: typeof lowerBody;
+  exercises: ProgramSchemaLayout;
 }
