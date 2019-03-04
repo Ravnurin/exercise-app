@@ -46,7 +46,7 @@ function HomePage(props: Props) {
     } else {
       setLowerBodyExercises(exercises[exercises.length - 1].lowerBody); 
     }
-  }, [exercises[exercises.length - 1], currentPage]);
+  }, [exercises[exercises.length - 1].upperBody, currentPage]);
   
   const handleUpperBodyChange = (names: Names, value: number) => {
     const updatedExercises = getUpdatedExercises<UpperBodySchema>({ exerciseGroup: upperBodyExercises, names, value });
