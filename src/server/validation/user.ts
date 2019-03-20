@@ -13,20 +13,20 @@ const validateLoginInput = ({ username, password }: ValidationData) => {
   password = !isEmpty(password) ? password : '';
 
   if (Validator.isEmpty(username)) {
-      errors.username = 'Username is required';
+    errors.username = 'Username is required';
   }
 
   if (!Validator.isLength(password, { min: 6, max: 30 })) {
-      errors.password = 'Password must have 6 chars';
+    errors.password = 'Password must have 6 chars';
   }
 
   if (Validator.isEmpty(password)) {
-      errors.password = 'Password is required';
+    errors.password = 'Password is required';
   }
 
   return {
-      errors,
-      isValid: isEmpty(errors)
+    errors,
+    isValid: isEmpty(errors)
   };
 };
 

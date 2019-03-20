@@ -13,7 +13,7 @@ export const validateUserInput = (user: Partial<ValidationData>) => {
   const errors = {} as ValidationData;
   const { username, currentPassword, newPassword } = user;
 
-  if (username != null && !Validator.isLength(username, { min: 2, max: 30})) {
+  if (username != null && !Validator.isLength(username, { min: 2, max: 30 })) {
     errors.username = 'Username must be between 2 and 30 characters';
   }
 
@@ -21,20 +21,20 @@ export const validateUserInput = (user: Partial<ValidationData>) => {
     errors.username = 'Username field is required';
   }
 
-  if (currentPassword != null && !Validator.isLength(currentPassword, {min: 6, max: 30})) {
-      errors.currentPassword = 'Current Password must have 6 chars';
+  if (currentPassword != null && !Validator.isLength(currentPassword, { min: 6, max: 30 })) {
+    errors.currentPassword = 'Current Password must have 6 chars';
   }
 
   if (currentPassword != null && Validator.isEmpty(currentPassword)) {
-      errors.currentPassword = 'Current Password is required';
+    errors.currentPassword = 'Current Password is required';
   }
 
-  if (currentPassword != null && !Validator.isEmpty(currentPassword) && newPassword == null || (newPassword != null && Validator.isEmpty(newPassword))) {
-      errors.newPassword = 'New Password is required';
+  if ((currentPassword != null && !Validator.isEmpty(currentPassword) && newPassword == null) || (newPassword != null && Validator.isEmpty(newPassword))) {
+    errors.newPassword = 'New Password is required';
   }
 
-  if (newPassword != null && !Validator.isLength(newPassword, {min: 6, max: 30})) {
-      errors.newPassword = 'New Password must have 6 chars';
+  if (newPassword != null && !Validator.isLength(newPassword, { min: 6, max: 30 })) {
+    errors.newPassword = 'New Password must have 6 chars';
   }
 
   if (newPassword != null && Validator.isEmpty(newPassword)) {
@@ -53,7 +53,7 @@ const validateRegisterInput = ({ username, password, passwordConfirm }: Validati
   password = !isEmpty(password) ? password : '';
   passwordConfirm = !isEmpty(passwordConfirm) ? passwordConfirm : '';
 
-  if (!Validator.isLength(username, { min: 2, max: 30})) {
+  if (!Validator.isLength(username, { min: 2, max: 30 })) {
     errors.username = 'Username must be between 2 and 30 characters';
   }
 
@@ -61,24 +61,24 @@ const validateRegisterInput = ({ username, password, passwordConfirm }: Validati
     errors.username = 'Username field is required';
   }
 
-  if (!Validator.isLength(password, {min: 6, max: 30})) {
-      errors.password = 'Password must have 6 chars';
+  if (!Validator.isLength(password, { min: 6, max: 30 })) {
+    errors.password = 'Password must have 6 chars';
   }
 
   if (Validator.isEmpty(password)) {
-      errors.password = 'Password is required';
+    errors.password = 'Password is required';
   }
 
-  if (!Validator.isLength(passwordConfirm, {min: 6, max: 30})) {
-      errors.passwordConfirm = 'Password must have 6 chars';
+  if (!Validator.isLength(passwordConfirm, { min: 6, max: 30 })) {
+    errors.passwordConfirm = 'Password must have 6 chars';
   }
 
   if (!Validator.equals(password, passwordConfirm)) {
-      errors.passwordConfirm = 'Password and Confirm Password must match';
+    errors.passwordConfirm = 'Password and Confirm Password must match';
   }
 
   if (Validator.isEmpty(passwordConfirm)) {
-      errors.passwordConfirm = 'Confirm Password is required';
+    errors.passwordConfirm = 'Confirm Password is required';
   }
 
   return {

@@ -22,13 +22,13 @@ router.post('/register', (req, res) => {
 
   User.findOne({ username: req.body.username }).then(user => {
     if (user) {
-        return res.status(HttpStatusCode.ClientError).json({
-            username: 'Username already exists'
-        });
+      return res.status(HttpStatusCode.ClientError).json({
+        username: 'Username already exists'
+      });
     } else {
       const newUser: any = new User({
-          username: req.body.username,
-          password: req.body.password
+        username: req.body.username,
+        password: req.body.password
       });
 
       bcrypt.genSalt(10, (err, salt) => {
@@ -45,8 +45,8 @@ router.post('/register', (req, res) => {
                   res.json(u);
                 });
             }
-            });
-          }
+          });
+        }
       });
     }
   });
@@ -60,26 +60,28 @@ router.post('/login', (req, res) => {
   }
 
   const { username, password } = req.body;
-  // const initialPayload = { username };
-
-  /* jwt.sign(initialPayload, 's15idEi36ZYkvlTZmTGbtjoHQV03HtWh', {
-    expiresIn: 3600
-  }, (err, token) => {
-    if (err) {
-      console.error(`There is some error in token: ${token}`);
-    } else {
-      res.json({
-        success: true,
-        token: `Bearer ${token}`
-      });
-    }
-  }); */
+  const initialPayload = { username };
 
   User.findOne({ username }).then((user: any) => {
-    if (!user) {
+    console.log("LOGIN IS NULL", user == null);
+    if (!user || user == null) {
       errors.username = 'User not found';
       return res.status(HttpStatusCode.ClientError);
     }
+
+    jwt.sign(initialPayload, 's15idEi36ZYkvlTZmTGbtjoHQV03HtWh', {
+      expiresIn: 3600
+    }, (err, token) => {
+      if (err) {
+        console.error(`There is some error in token: ${token}`);
+      } else {
+        res.json({
+          success: true,
+          token: `Bearer ${token}`
+        });
+      }
+    });
+
     const payload = { username: user.username };
 
     bcrypt.compare(password, user.password).then(isMatch => {
