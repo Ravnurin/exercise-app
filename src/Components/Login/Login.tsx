@@ -1,12 +1,12 @@
-import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { Row, Col, Form, FormGroup, Button } from 'reactstrap';
+import { Button, Col, Form, FormGroup, Row } from 'reactstrap';
 
-import FormInput from 'Components/LayoutElements/FormInput';
 import { loginUser } from 'ActionCreators/Login';
-import { ApplicationState } from '../../Reducers/index';
-import { SecureUser } from '../../Types/User';
+import FormInput from 'Components/LayoutElements/FormInput';
+import { ApplicationState } from 'Reducers/index';
+import { SecureUser } from 'Types/User';
 
 interface LoginState {
   username: string;
@@ -26,32 +26,48 @@ function LoginPage(props: Props) {
     username: '',
     password: ''
   });
-  
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
-  }
+  };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     props.loginUser(user);
-  }
+  };
 
-  useEffect(() => {
-    if (auth.isAuthenticated) {
-      props.history.push('/');
-    }
-  }, [ auth.isAuthenticated, Object.keys(errors).length]);
+  useEffect(
+    () => {
+      if (auth.isAuthenticated) {
+        props.history.push('/');
+      }
+    },
+    [auth.isAuthenticated, Object.keys(errors).length]
+  );
 
   const formProps = { errors, onChange: handleChange };
   return (
     <Row className='justify-content-center'>
-      <Col xs={12} md={4}>
+      <Col xs={12} md={4} xl={2}>
         <Form name='form' onSubmit={handleSubmit}>
-          <FormInput placeholder='Username' value={user.username} name='username' {...formProps} />
-          <FormInput placeholder='Password' value={user.password} type='password' name='password' {...formProps} />
+          <FormInput
+            placeholder='Username'
+            value={user.username}
+            name='username'
+            {...formProps}
+          />
+          <FormInput
+            placeholder='Password'
+            value={user.password}
+            type='password'
+            name='password'
+            {...formProps}
+          />
           <FormGroup className='text-center'>
-            <Button color='primary' type='submit'>Login</Button>
+            <Button color='primary' type='submit'>
+              Login
+            </Button>
           </FormGroup>
         </Form>
       </Col>
@@ -64,4 +80,7 @@ const mapStateToProps = ({ auth, errors }: State) => ({
   errors
 });
 
-export default connect(mapStateToProps, { loginUser })(LoginPage);
+export default connect(
+  mapStateToProps,
+  { loginUser }
+)(LoginPage);

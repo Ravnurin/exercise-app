@@ -10,6 +10,7 @@ import { Names } from './Exercise';
 import LowerBody from './LowerBody';
 import { getUpdatedExercises } from '../Helpers/HomeHelpers';
 import { ProgramSchemaLayout, UpperBodySchema, LowerBodySchema } from 'Types/Program';
+import { isGroupEmpty } from 'Utils/Exercises';
 
 interface ProfileState {
   exercises: ProgramSchemaLayout[];
@@ -34,7 +35,7 @@ function HomePage(props: Props) {
 
   const [currentPage, setCurrentPage] = useState<Page>(MuscleGroup.UpperBody);
   const [lowerBodyExercises, setLowerBodyExercises] = useState<LowerBodySchema>(exercises[exercises.length - 1].lowerBody);
-  const [upperBodyExercises, setUpperBodyExercises] = useState<UpperBodySchema>(exercises[exercises.length - 1].upperBody);
+  const [upperBodyExercises, setUpperBodyExercises] = useState<UpperBodySchema[]>([]);
 
   useEffect(() => {
     props.getUserExercises(props.auth.user.username);
@@ -42,16 +43,22 @@ function HomePage(props: Props) {
 
   useEffect(() => {
     if (currentPage === MuscleGroup.UpperBody) {
-      setUpperBodyExercises(exercises[exercises.length - 1].upperBody);
+      const upperBodyWithHistory = exercises.filter(e => !isGroupEmpty(e, 'upperBody')).map(e => ({ ...e.upperBody, date: e.date }));
+      setUpperBodyExercises(upperBodyWithHistory);
     } else {
-      setLowerBodyExercises(exercises[exercises.length - 1].lowerBody); 
+      setLowerBodyExercises(exercises[exercises.length - 1].lowerBody);
     }
   }, [exercises[exercises.length - 1].upperBody, currentPage]);
-  
-  const handleUpperBodyChange = (names: Names, value: number) => {
-    const updatedExercises = getUpdatedExercises<UpperBodySchema>({ exerciseGroup: upperBodyExercises, names, value });
 
-    setUpperBodyExercises(updatedExercises);
+  const handleUpperBodyChange = (names: Names, value: number) => {
+    const updatedExercises = getUpdatedExercises<UpperBodySchema>({ exerciseGroup: upperBodyExercises[upperBodyExercises.length - 1], names, value });
+    const updatedUpperBody = upperBodyExercises.map((u, i) => {
+      if (i === upperBodyExercises.length - 1) {
+        return updatedExercises;
+      }
+      return u;
+    })
+    setUpperBodyExercises(updatedUpperBody);
   };
 
   const handleLowerBodyChange = (names: Names, value: number) => {
@@ -60,12 +67,12 @@ function HomePage(props: Props) {
     setLowerBodyExercises(updatedExercises);
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = (ev: FormEvent<HTMLFormElement>) => {
+    ev.preventDefault();
 
     const updatedExercises = exercises.map(e => {
       if (e.date === exercises[exercises.length - 1].date) {
-        return { upperBody: upperBodyExercises, lowerBody: lowerBodyExercises } as ProgramSchemaLayout;
+        return { upperBody: upperBodyExercises[upperBodyExercises.length - 1], lowerBody: lowerBodyExercises } as ProgramSchemaLayout;
       }
       return e;
     });
@@ -76,20 +83,27 @@ function HomePage(props: Props) {
     <Row className='justify-content-center'>
       <Col xs={12} sm={6} className='col-4 mx-auto text-center'>
         <h3>Which Split?</h3>
-        <Button color='primary' className='mx-4' onClick={() => setCurrentPage(MuscleGroup.UpperBody)}>Upper Body</Button>
-        <Button color='primary' onClick={() => setCurrentPage(MuscleGroup.LowerBody)}>Lower Body</Button>
+        <Button color='primary' className='mx-4' onClick={() => setCurrentPage(MuscleGroup.UpperBody)}>
+          Upper Body
+        </Button>
+        <Button color='primary' onClick={() => setCurrentPage(MuscleGroup.LowerBody)}>
+          Lower Body
+        </Button>
       </Col>
       <Col xs={12} md={12}>
         <Form name='form' onSubmit={handleSubmit}>
-          { currentPage === MuscleGroup.UpperBody
-            ? <UpperBody onChange={handleUpperBodyChange} upperBody={upperBodyExercises} />
-            : <LowerBody onChange={handleLowerBodyChange} lowerBody={lowerBodyExercises} />
-          }
-          { (upperBodyExercises || lowerBodyExercises) &&
-          <FormGroup className='text-center'>
-              <Button color='primary' type='submit'>Save</Button>
-          </FormGroup>
-        }
+          {currentPage === MuscleGroup.UpperBody ? (
+            <UpperBody onChange={handleUpperBodyChange} upperBody={upperBodyExercises} />
+          ) : (
+              <LowerBody onChange={handleLowerBodyChange} lowerBody={lowerBodyExercises} />
+            )}
+          {(upperBodyExercises || lowerBodyExercises) && (
+            <FormGroup className='text-center'>
+              <Button color='primary' type='submit'>
+                Save
+              </Button>
+            </FormGroup>
+          )}
         </Form>
       </Col>
     </Row>
@@ -102,4 +116,7 @@ const mapStateToProps = ({ auth, exercises, errors }: State) => ({
   errors
 });
 
-export default connect(mapStateToProps, ExerciseActions)(HomePage);
+export default connect(
+  mapStateToProps,
+  ExerciseActions
+)(HomePage);

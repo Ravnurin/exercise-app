@@ -1,19 +1,28 @@
 {
-  "extends": ["tslint:recommended"],
+  "extends": ["tslint:latest", "tslint-react", "tslint-config-prettier"],
   "rules": {
-    "no-unused-expression": false,
-    "no-console": false,
-    "interface-name": [false, "always-prefix"],
     "max-line-length": [true, 200],
     "object-literal-sort-keys": false,
+    "interface-name": [false, "always-prefix"],
+    "no-implicit-dependencies": false,
+    "import-spacing": true,
+    "no-submodule-imports": false,
+    "no-object-literal-type-assertion": false,
+    "ordered-imports": false,
+    "arrow-parens": [true, "ban-single-arg-parens"],
+    "only-arrow-functions": [true, "allow-declarations", "allow-named-functions"],
+    "jsx-no-lambda": false,
+    "triple-equals": false,
+    "newline-per-chained-call": false
+    /*"no-unused-expression": false,
+    "no-console": false,
+
     "member-access": [false, "check-accessor"],
     "member-ordering": false,
     "no-var-requires": false,
     "max-classes-per-file": [true, 2],
     "only-arrow-functions": [true, "allow-declarations", "allow-named-functions" ],
     "import-spacing": true,
-    "ordered-imports": false,
-    "arrow-parens": [true, "ban-single-arg-parens"],
     "quotemark": [true, "single"],
     "trailing-comma": [
       true,
@@ -33,14 +42,9 @@
       "allow-leading-underscore",
       "allow-pascal-case",
       "allow-snake-case"
-    ]
+    ]*/
   },
-  "rulesDirectory": [],
   "linterOptions": {
-    "exclude": [
-      "config/**/*.js",
-      "node_modules/**/*.ts",
-      "coverage/lcov-report/*.js"
-    ]
+    "exclude": ["config/**/*.js", "node_modules/**/*.ts"]
   }
 }

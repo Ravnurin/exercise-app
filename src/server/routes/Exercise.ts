@@ -12,7 +12,6 @@ const router = express.Router();
 router.post('/user', (req, res) => {
   User.findOne({ username: req.body.username }).then((user: any) => {
     const errors = {} as ErrorState;
-
     if (!user) {
       errors.username = 'User not found';
       return res.status(HttpStatusCode.ClientError);
@@ -24,7 +23,7 @@ router.post('/user', (req, res) => {
 router.post('/user/update', (req, res) => {
   const { username, exercises } = req.body;
 
-  User.findOneAndUpdate({ username }, { $set: { exercises } }, (e, user: any) => {
+  User.findOneAndUpdate({ username }, { $set: { exercises } }, { new: true }, (e, user: any) => {
     if (e) {
       return res.status(HttpStatusCode.ClientError).json(e);
     }
@@ -34,9 +33,9 @@ router.post('/user/update', (req, res) => {
       errors.username = 'Exercises not updated';
       return res.status(HttpStatusCode.ClientError);
     }
-
     return res.json(user.exercises);
-  });
+  }
+  );
 });
 
 export default router;
