@@ -63,7 +63,6 @@ router.post('/login', (req, res) => {
   const initialPayload = { username };
 
   User.findOne({ username }).then((user: any) => {
-    console.log("LOGIN IS NULL", user == null);
     if (!user || user == null) {
       errors.username = 'User not found';
       return res.status(HttpStatusCode.ClientError);

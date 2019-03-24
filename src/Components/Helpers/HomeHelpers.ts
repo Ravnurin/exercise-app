@@ -1,4 +1,4 @@
-import { Names } from '../Home/Exercise';
+import { Names } from '../Home/Workout/Exercise';
 import { LowerBodySchema, UpperBodySchema, ExerciseSet } from 'Types/Program';
 
 interface UpdateExerciseFnProps {

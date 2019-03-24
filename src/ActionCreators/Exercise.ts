@@ -23,7 +23,7 @@ export const getUserExercises = (username: string) => (dispatch: any) => {
     });
 };
 
-export const updateUserExercises = (username: string, exercises: ProgramSchemaLayout[]) => (dispatch: any) => {
+export const updateUserWorkout = (username: string, exercises: ProgramSchemaLayout) => (dispatch: any) => {
   axios
     .post('/api/exercises/user/update', { username, exercises })
     .then(res => {

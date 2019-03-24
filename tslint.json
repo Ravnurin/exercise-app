@@ -13,7 +13,8 @@
     "only-arrow-functions": [true, "allow-declarations", "allow-named-functions"],
     "jsx-no-lambda": false,
     "triple-equals": false,
-    "newline-per-chained-call": false
+    "newline-per-chained-call": false,
+    "jsx-boolean-value": false
     /*"no-unused-expression": false,
     "no-console": false,
 
