@@ -11,7 +11,7 @@ interface SetComponentProps {
   exerciseName: ExerciseName;
   stats: ExerciseSet[];
   isHistorySet?: boolean;
-  onChange?: (names: Names, value: number) => void;
+  onChange?: (names: Names, value: string) => void;
 }
 
 export default function Set({ exerciseName, setIndex, stats, onChange, isHistorySet }: SetComponentProps) {
@@ -21,7 +21,7 @@ export default function Set({ exerciseName, setIndex, stats, onChange, isHistory
 
   const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
     const { name: modifiedName, value } = target as { name: ModifiedName; value: string };
-    onChange!({ modifiedName, exerciseName, setIndex: set }, Number(value));
+    onChange!({ modifiedName, exerciseName, setIndex: set }, value);
   };
 
   const inputProps = {

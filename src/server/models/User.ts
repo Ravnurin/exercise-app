@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 import ProgramSchema from './Program/Program';
+import moment from 'moment';
 
 const Schema = mongoose.Schema;
 
@@ -15,7 +16,7 @@ const UserSchema = new Schema({
   },
   createdDate: {
     type: Date,
-    default: Date.now
+    default: moment().startOf('day')
   },
   exercises: {
     type: [ProgramSchema],

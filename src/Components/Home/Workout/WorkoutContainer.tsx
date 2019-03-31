@@ -1,15 +1,17 @@
 import React, { useEffect, useState, FormEvent } from 'react';
 import { Col, Row, Form, FormGroup, Button } from 'reactstrap';
+import moment from 'moment';
 
-import UpperBody from './UpperBody';
+import UpperBody, { upperBodyTemplate } from './UpperBody';
+import LowerBody, { lowerBodyTemplate } from './LowerBody';
 import { Names } from './Exercise';
-import LowerBody from './LowerBody';
 import { getUpdatedExercises } from 'Components/Helpers/HomeHelpers';
 import { ProgramSchemaLayout, UpperBodySchema, LowerBodySchema } from 'Types/Program';
+import { connect } from 'react-redux';
+import { updateUserWorkout } from 'ActionCreators/Exercise';
+import { ApplicationState } from 'Reducers';
 
-interface Props {
-  workout: ProgramSchemaLayout;
-  username: string;
+interface OwnProps {
   updateUserWorkout: (username: string, exercises: ProgramSchemaLayout) => void;
 }
 
@@ -18,25 +20,45 @@ enum MuscleGroup {
   'LowerBody'
 }
 
+
+type Props = OwnProps & Pick<ApplicationState, 'auth' | 'exercises'>;
 type Page = MuscleGroup.UpperBody | MuscleGroup.LowerBody;
 
-export default function Workout({ workout, username, updateUserWorkout }: Props) {
+function WorkoutContainer(props: Props) {
+  const { auth, exercises } = props;
   const [currentPage, setCurrentPage] = useState<Page>(MuscleGroup.UpperBody);
-  const [lowerBodyExercises, setLowerBodyExercises] = useState<LowerBodySchema>(workout.lowerBody);
-  const [upperBodyExercises, setUpperBodyExercises] = useState<UpperBodySchema>(workout.upperBody);
+
+  const [lowerBodyExercises, setLowerBodyExercises] = useState<LowerBodySchema>(lowerBodyTemplate);
+  const [upperBodyExercises, setUpperBodyExercises] = useState<UpperBodySchema>(upperBodyTemplate);
 
   useEffect(() => {
-    setUpperBodyExercises(workout.upperBody);
-    setLowerBodyExercises(workout.lowerBody);
-  }, [workout]);
+    const workout = exercises[exercises.length - 1] || {};
 
-  const handleUpperBodyChange = (names: Names, value: number) => {
+    if (typeof workout.date === 'string') {
+      const mDate = moment(workout.date);
+
+      if (mDate.isValid() && mDate.isSame(moment().startOf('day'))) {
+        const { upperBody, lowerBody } = exercises[exercises.length - 1];
+
+        setLowerBodyExercises(lowerBody);
+        setUpperBodyExercises(upperBody);
+      }
+    }
+  }, [exercises.length]);
+
+  const handleUpperBodyChange = (names: Names, value: string) => {
+    if (isNaN(Number(value))) {
+      return;
+    }
     const updatedExercises = getUpdatedExercises<UpperBodySchema>({ exerciseGroup: upperBodyExercises, names, value });
 
     setUpperBodyExercises(updatedExercises);
   };
 
-  const handleLowerBodyChange = (names: Names, value: number) => {
+  const handleLowerBodyChange = (names: Names, value: string) => {
+    if (isNaN(Number(value))) {
+      return;
+    }
     const updatedExercises = getUpdatedExercises<LowerBodySchema>({ exerciseGroup: lowerBodyExercises, names, value });
 
     setLowerBodyExercises(updatedExercises);
@@ -48,10 +70,10 @@ export default function Workout({ workout, username, updateUserWorkout }: Props)
     const updatedExericse: ProgramSchemaLayout = {
       upperBody: upperBodyExercises,
       lowerBody: lowerBodyExercises,
-      date: workout.date || new Date()
+      date: moment().startOf('day')
     };
 
-    updateUserWorkout(username, updatedExericse);
+    props.updateUserWorkout(auth.user.username, updatedExericse);
   };
 
   return (
@@ -83,3 +105,10 @@ export default function Workout({ workout, username, updateUserWorkout }: Props)
     </Row>
   );
 }
+
+const mapStateToProps = ({ auth, exercises }: ApplicationState) => ({
+  auth,
+  exercises
+});
+
+export default connect(mapStateToProps, { updateUserWorkout })(WorkoutContainer);

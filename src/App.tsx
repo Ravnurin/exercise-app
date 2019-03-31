@@ -12,6 +12,7 @@ import store from 'Store';
 import { setCurrentUser } from './ActionCreators/Authentication';
 import Header from 'Layout/Header';
 import { Home } from 'Components/Home';
+import { CustomiseExercises } from 'Components/Customise';
 import { Login } from 'Components/Login';
 import { Register } from 'Components/Register';
 
@@ -39,12 +40,13 @@ export default function App() {
   }
   return (
     <Jumbotron>
-      <Container fluid className='App' style={{ marginTop: '5rem'}}>
+      <Container fluid className='App' style={{ marginTop: '5rem' }}>
         <Router history={history}>
           <div>
             <Header />
-            { getToastr() }
+            {getToastr()}
             <PrivateRoute exact path='/' component={Home} />
+            <PrivateRoute exact path='/customise' component={CustomiseExercises} />
             <Route path='/register' component={Register} />
             <Route path='/login' component={Login} />
           </div>

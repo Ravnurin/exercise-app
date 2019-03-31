@@ -1,3 +1,5 @@
+import { Moment } from 'moment';
+
 export interface ExerciseSet {
   weight: number | string;
   reps: number | string;
@@ -26,7 +28,7 @@ export interface LowerBodySchema {
 }
 
 export interface ProgramSchemaLayout {
-  date: Date;
+  date: Moment;
   upperBody: UpperBodySchema;
   lowerBody: LowerBodySchema;
 }

@@ -6,7 +6,7 @@ import { Row } from 'reactstrap';
 import { FriendlyNames } from '../../../Types/Program';
 
 interface Props {
-  onChange: (names: Names, set: number) => void;
+  onChange: (names: Names, set: string) => void;
   lowerBody: LowerBodySchema;
 }
 
@@ -24,4 +24,15 @@ export default function LowerBody({ lowerBody, onChange }: Props) {
       )}
     </Row>
   );
+};
+
+export const lowerBodyTemplate = {
+  squat: [],
+  rdlOrLegCurl: [],
+  legPress: [],
+  legCurl: [],
+  calfRaise: [],
+  seatedCalfRaise: [],
+  abs: [],
+  lowBack: []
 };

@@ -2,17 +2,34 @@ import React from 'react';
 import { ProgramSchemaLayout, FriendlyNames, LowerBodySchema, UpperBodySchema } from 'Types/Program';
 import { Row } from 'reactstrap';
 import Exercise from '../Workout/Exercise';
+import { connect } from 'react-redux';
+import { ApplicationState } from 'Reducers';
+import moment from 'moment';
 
 interface Props {
   exercises: ProgramSchemaLayout[];
 }
 
-export default function WorkoutHistory({ exercises }: Props) {
-  if (exercises == null || exercises.length < 2) {
+function WorkoutHistory({ exercises }: Props) {
+  if (exercises == null || exercises.length < 1) {
     return null;
   }
 
-  const history = { ...exercises[exercises.length - 2].upperBody, ...exercises[exercises.length - 2].lowerBody };
+  let workout = exercises[exercises.length - 1] || {};
+
+  if (typeof workout.date === 'string') {
+    const mDate = moment(workout.date);
+
+    if (mDate.isValid() && mDate.isSame(moment().startOf('day'))) {
+      if (exercises.length > 1) {
+        workout = exercises[exercises.length - 2];
+      } else {
+        return null;
+      }
+    }
+  }
+
+  const history = { ...workout.upperBody, ...workout.lowerBody };
   const exerciseNames = Object.keys(FriendlyNames).filter(k => history[k] != null && history[k].length > 0) as Array<keyof UpperBodySchema & LowerBodySchema>;
 
   return (
@@ -23,3 +40,12 @@ export default function WorkoutHistory({ exercises }: Props) {
     </Row>
   );
 }
+
+const mapStateToProps = ({ auth, exercises, errors }: ApplicationState) => ({
+  auth,
+  exercises,
+  errors
+});
+
+
+export default connect(mapStateToProps, null)(WorkoutHistory);

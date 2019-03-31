@@ -4,7 +4,7 @@ import { LowerBodySchema, UpperBodySchema, ExerciseSet } from 'Types/Program';
 interface UpdateExerciseFnProps {
   exerciseGroup: UpperBodySchema | LowerBodySchema;
   names: Names;
-  value: number;
+  value: string;
 }
 
 export const getUpdatedExercises = <T>({ exerciseGroup, names, value }: UpdateExerciseFnProps): T => {
@@ -12,11 +12,11 @@ export const getUpdatedExercises = <T>({ exerciseGroup, names, value }: UpdateEx
   const exercise = exerciseGroup[exerciseName];
   const updated: ExerciseSet[] = exercise.map((s: ExerciseSet, i: number) => {
     if (i === setIndex) {
-      return { ...s, [modifiedName]: value};
+      return { ...s, [modifiedName]: value };
     }
     return s;
   })
-  
+
   if (exercise[setIndex] == null) {
     updated.push({ weight: '', reps: '', [modifiedName]: value });
   }

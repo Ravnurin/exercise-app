@@ -5,7 +5,7 @@ import { UpperBodySchema, FriendlyNames } from 'Types/Program';
 import { Row } from 'reactstrap';
 
 interface Props {
-  onChange: (names: Names, set: number) => void;
+  onChange: (names: Names, set: string) => void;
   upperBody: UpperBodySchema;
 }
 
@@ -25,3 +25,14 @@ export default function UpperBody({ upperBody, onChange }: Props) {
     </Row>
   );
 }
+
+export const upperBodyTemplate = {
+  flatBench: [],
+  row: [],
+  inclineDbBench: [],
+  pulldown: [],
+  lateralRaise: [],
+  rearDelt: [],
+  triceps: [],
+  biceps: []
+};

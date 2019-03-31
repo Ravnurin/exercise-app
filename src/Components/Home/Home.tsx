@@ -1,31 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
 
-import * as ExerciseActions from 'ActionCreators/Exercise';
+import { getUserExercises } from 'ActionCreators/Exercise';
 import { ApplicationState } from 'Reducers';
-import { ProgramSchemaLayout } from 'Types/Program';
 import { WorkoutContainer } from './Workout';
 import { WorkoutHistory } from './WorkoutHistory';
-
-interface OwnProps {
-  getUserExercises: (username: string) => void;
-  updateUserWorkout: (username: string, exercises: ProgramSchemaLayout) => void;
-}
-
-type Props = OwnProps & RouteComponentProps & ApplicationState;
 
 enum PageView {
   'History',
   'Workout'
 }
 
-function HomePage({ auth, getUserExercises, updateUserWorkout, exercises }: Props) {
+interface OwnProps {
+  getUserExercises: (username: string) => void;
+}
+
+type Props = OwnProps & ApplicationState;
+
+function HomePage(props: Props) {
   const [view, setPageView] = useState<PageView>(PageView.Workout);
 
   useEffect(() => {
-    getUserExercises(auth.user.username);
+    props.getUserExercises(props.auth.user.username);
   }, []);
 
   return (
@@ -37,20 +34,17 @@ function HomePage({ auth, getUserExercises, updateUserWorkout, exercises }: Prop
         </Col>
       </Row>
       {view === PageView.Workout
-        ? (<WorkoutContainer
-          workout={exercises[exercises.length - 1]}
-          username={auth.user.username}
-          updateUserWorkout={updateUserWorkout} />)
-        : (<WorkoutHistory exercises={exercises} />)
+        ? <WorkoutContainer />
+        : <WorkoutHistory />
       }
     </div>
   );
 }
 
-const mapStateToProps = ({ auth, exercises, errors }: ApplicationState) => ({
+const mapStateToProps = ({ auth, errors, exercises }: Partial<ApplicationState>) => ({
   auth,
-  exercises,
-  errors
+  errors,
+  exercises
 });
 
-export default connect(mapStateToProps, ExerciseActions)(HomePage);
+export default connect(mapStateToProps, { getUserExercises })(HomePage);

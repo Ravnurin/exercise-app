@@ -16,7 +16,7 @@ interface ExerciseProps {
   exerciseName: ExerciseName;
   stats: UpperBodySchema | LowerBodySchema;
   isHistorySet?: boolean;
-  onChange?: (names: Names, value: number) => void;
+  onChange?: (names: Names, value: string) => void;
 }
 
 export default function Exercise(props: ExerciseProps) {
