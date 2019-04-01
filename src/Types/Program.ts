@@ -1,5 +1,9 @@
 import { Moment } from 'moment';
 
+export interface CustomExercise {
+  name: string;
+}
+
 export interface ExerciseSet {
   weight: number | string;
   reps: number | string;

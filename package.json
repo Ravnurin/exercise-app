@@ -80,6 +80,7 @@
     "react-redux": "^7.0.0-beta.0",
     "react-redux-toastr": "^7.4.8",
     "react-router-dom": "^5.0.0",
+    "react-use-form-state": "^0.9.0",
     "reactstrap": "^6.5.0",
     "redux": "^4.0.1",
     "redux-logger": "^3.0.6",

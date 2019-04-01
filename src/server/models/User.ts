@@ -21,6 +21,10 @@ const UserSchema = new Schema({
   exercises: {
     type: [ProgramSchema],
     default: [ProgramSchema]
+  },
+  customExercises: {
+    type: Array,
+    default: []
   }
 });
 
