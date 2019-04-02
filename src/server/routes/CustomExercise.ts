@@ -21,7 +21,7 @@ router.post('/user', (req, res) => {
   });
 });
 
-router.post('/user/update', (req, res) => {
+router.post('/user/add', (req, res) => {
   const { username, customExerciseName } = req.body as { username: string, customExerciseName: string };
 
   User.findOne({ username }).then((user: any) => {
@@ -33,9 +33,6 @@ router.post('/user/update', (req, res) => {
     }
 
     const customExercises = [...user.customExercises] as any;
-    console.log("CUSTOM EXERCISE IS ", customExerciseName);
-
-    console.log("CUSTOM EXERCISES SAVED ARE ", customExercises);
     if (customExercises.includes(customExerciseName.toLowerCase())) {
       console.log("CUSTOM EXERCISE EXISTS");
       errors.customExercise = 'Exercise already exists';
@@ -43,6 +40,33 @@ router.post('/user/update', (req, res) => {
     }
 
     User.findOneAndUpdate({ username }, { $push: { customExercises: customExerciseName.toLowerCase() } }, { new: true }, (e, u: any) => {
+      if (e) {
+        return res.status(HttpStatusCode.ClientError).json(e);
+      }
+
+      if (!u) {
+        errors.username = 'Exercises not updated';
+        return res.status(HttpStatusCode.ClientError);
+      }
+      return res.json(u.customExercises);
+    });
+  });
+});
+
+router.post('/user/delete', (req, res) => {
+  const { username, customExerciseName } = req.body as { username: string, customExerciseName: string };
+
+  User.findOne({ username }).then((user: any) => {
+    const errors = {} as ErrorState;
+
+    if (user == null) {
+      errors.username = 'User not found';
+      return res.status(HttpStatusCode.ClientError);
+    }
+
+    const customExercises = user.customExercises.filter((c: string) => c !== customExerciseName);
+
+    User.findOneAndUpdate({ username }, { $set: { customExercises } }, { new: true }, (e, u: any) => {
       if (e) {
         return res.status(HttpStatusCode.ClientError).json(e);
       }

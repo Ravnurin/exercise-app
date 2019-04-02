@@ -9,12 +9,11 @@ import errorReducer from './errorReducer';
 import { AuthState } from 'Types/Authentication';
 import { ErrorState } from 'Types/Errors';
 import { ExerciseState } from 'Types/Exercise';
-import { CustomExercise } from 'Types/Program';
 
 export interface ApplicationState {
   auth: AuthState;
   exercises: ExerciseState[];
-  customExercises: CustomExercise[];
+  customExercises: string[];
   errors: ErrorState;
   toastr: ToastrState;
 }

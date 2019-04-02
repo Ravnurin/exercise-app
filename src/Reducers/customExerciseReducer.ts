@@ -7,9 +7,11 @@ const initialState = [] as CustomExerciseState[];
 
 const customExerciseReducer: Reducer<CustomExerciseState[], CustomExerciseAction> = (state = initialState, action) => {
   switch (action.type) {
-    case Actions.GET_USER_CUSTOM_EXERCISES:
+    case Actions.GET_CUSTOM_EXERCISES:
       return action.payload;
-    case Actions.UPDATE_USER_CUSTOM_EXERCISES:
+    case Actions.ADD_CUSTOM_EXERCISE:
+      return action.payload;
+    case Actions.DELETE_CUSTOM_EXERCISE:
       return action.payload;
     default:
       return state;

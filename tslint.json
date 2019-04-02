@@ -14,9 +14,9 @@
     "jsx-no-lambda": false,
     "triple-equals": false,
     "newline-per-chained-call": false,
-    "jsx-boolean-value": false
-    /*"no-unused-expression": false,
-    "no-console": false,
+    "jsx-boolean-value": false,
+    "no-unused-expression": false,
+    /* "no-console": false,
 
     "member-access": [false, "check-accessor"],
     "member-ordering": false,
