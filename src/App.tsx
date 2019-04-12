@@ -17,6 +17,7 @@ import { Login } from 'Components/Login';
 import { Register } from 'Components/Register';
 
 import 'App.scss';
+import { Nutrition } from 'Components/Nutrition';
 
 if (localStorage.jwtToken) {
   setAuthToken(localStorage.jwtToken);
@@ -47,6 +48,7 @@ export default function App() {
             {getToastr()}
             <PrivateRoute exact path='/' component={Home} />
             <PrivateRoute exact path='/customise' component={CustomiseExercises} />
+            <PrivateRoute exact path='/nutrition' component={Nutrition} />
             <Route path='/register' component={Register} />
             <Route path='/login' component={Login} />
           </div>

@@ -10,8 +10,8 @@ import { ApplicationState } from 'Reducers';
 
 
 const getUrl = (url: string) => `/${url}`;
-const getNavLink = (children: JSX.Element | any[] | string, url: string = '', props: any = {}) =>
-  <NavLink to={getUrl(url)} className='nav-link' activeClassName='active' {...props}>{children}</NavLink>;
+const getNavLink = (children: JSX.Element | any[] | string, { route = '', ...props }) =>
+  <NavLink to={getUrl(route)} className='nav-link' activeClassName='active' {...props}>{children}</NavLink>;
 
 interface OwnProps {
   logoutUser: (history: History) => void;
@@ -30,17 +30,11 @@ function Header(props: Props) {
 
   const getAuthLinks = () => {
     const links = [
-      { name: 'Logout', route: '#', props: { onClick: () => handleLogout } },
-      { name: 'Customise', route: 'customise', props: {} }
+      { name: 'Logout', route: '#', onClick: (e: any) => handleLogout(e) },
+      { name: 'Customise', route: 'customise', props: {} },
+      { name: 'Nutrition', route: 'nutrition', props: {} }
     ];
-    return links.map((l, index: number) => <NavItem key={`${index}-${l.name}`}>{getNavLink(l.name, l.route, { key: `${l.name}-${index}`, ...l.props })}</NavItem>);
-    /* return (
-      <NavItem>
-        <NavLink to='#' className='nav-link' onClick={this.handleLogout}>
-          Logout
-        </NavLink>
-      </NavItem>
-    ); */
+    return links.map((l, index: number) => <NavItem key={`${index}-${l.name}`}>{getNavLink(l.name, { route: l.route, key: `${l.name}-${index}`, ...l })}</NavItem>);
   }
 
   const getGuestLinks = () => {
@@ -48,7 +42,7 @@ function Header(props: Props) {
       { name: 'Register', route: 'register' },
       { name: 'Login', route: 'login' }
     ];
-    return links.map((l, index: number) => <NavItem key={`${index}-${l.name}`}>{getNavLink(l.name, l.route, { key: `${l.name}-${index}` })}</NavItem>);
+    return links.map((l, index: number) => <NavItem key={`${index}-${l.name}`}>{getNavLink(l.name, { route: l.route, key: `${l.name}-${index}` })}</NavItem>);
   };
 
   const guestLinks = getGuestLinks();
@@ -61,7 +55,7 @@ function Header(props: Props) {
           <Collapse isOpen={isOpen} navbar>
             <Nav className='mx-auto' navbar>
               <NavItem>
-                {getNavLink('Home')}
+                {getNavLink('Home', {})}
               </NavItem>
               {isAuthenticated ? authLinks : guestLinks}
             </Nav>
