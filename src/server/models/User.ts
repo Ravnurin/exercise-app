@@ -25,6 +25,10 @@ const UserSchema = new Schema({
   customExercises: {
     type: Array,
     default: []
+  },
+  foodItems: {
+    type: Array,
+    default: []
   }
 });
 

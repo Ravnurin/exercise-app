@@ -1,11 +1,12 @@
 import { Actions } from 'constants/Nutrition';
 
-interface FoodItem {
+export interface FoodItem {
   name: string;
-  carbohydrates: number;
-  fats: number;
-  protein: number;
-  calories: number;
+  servingSize: string;
+  carbohydrates: number | string;
+  fats: number | string;
+  protein: number | string;
+  calories: number | string;
 }
 
 interface Nutrition {
@@ -16,5 +17,5 @@ export type NutritionState = Nutrition;
 
 export interface NutritionAction {
   type: Actions;
-  payload: Nutrition;
+  payload: FoodItem[];
 }
