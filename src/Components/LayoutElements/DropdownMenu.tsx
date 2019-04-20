@@ -6,11 +6,11 @@ interface Props {
 }
 
 export default function DropdownMenu({ options = [] }: Props) {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   if (options.length === 0) {
     return null;
   }
-
-  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
     <Dropdown isOpen={isOpen} toggle={() => setIsOpen(!isOpen)}>

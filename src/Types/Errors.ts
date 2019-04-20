@@ -2,7 +2,8 @@ export interface ErrorState {
   username?: string;
   password?: string;
   passwordConfirm?: string;
-  customExercise?: string;
+  customExerciseName?: string;
+  [key: string]: string | undefined;
 }
 
 export interface ErrorAction {

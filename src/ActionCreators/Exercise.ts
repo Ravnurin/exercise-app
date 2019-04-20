@@ -5,9 +5,9 @@ import { Actions } from 'constants/Exercise';
 import { Actions as ErrorAction } from 'constants/Authentication';
 import { ProgramSchemaLayout } from 'Types/Program';
 
-export const getUserExercises = (username: string) => (dispatch: any) => {
+export const getUserExercises = () => (dispatch: any) => {
   axios
-    .post('/api/exercises/user', { username })
+    .get('/api/exercises/user')
     .then(res => {
       dispatch({
         type: Actions.GET_USER_EXERCISES,
@@ -23,9 +23,9 @@ export const getUserExercises = (username: string) => (dispatch: any) => {
     });
 };
 
-export const updateUserWorkout = (username: string, exercises: ProgramSchemaLayout) => (dispatch: any) => {
+export const updateUserWorkout = (exercises: ProgramSchemaLayout) => (dispatch: any) => {
   axios
-    .post('/api/exercises/user/update', { username, exercises })
+    .post('/api/exercises/user/update', { exercises })
     .then(res => {
       dispatch({
         type: Actions.UPDATE_USER_EXERCISES,

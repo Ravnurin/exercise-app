@@ -9,14 +9,11 @@ import { setCurrentUser } from './Authentication';
 
 export const loginUser = (user: SecureUser) => (dispatch: any) => {
   axios.post('/api/users/login', user)
-    .then(({ data: { token }}: any) => {
-      setAuth(token);
+    .then(res => {
+      const { token } = res.data;
       const decoded = jwt_decode(token);
+      setAuth(token);
       dispatch(setCurrentUser(decoded));
-      dispatch({
-        type: Actions.CLEAR_ERRORS,
-        payload: {}
-      });
       toastr.success('Login Success', '');
     })
     .catch(err => {

@@ -9,7 +9,6 @@ import exercises from './routes/Exercise';
 import customExercises from './routes/CustomExercise';
 import nutrition from './routes/Nutrition';
 
-
 import DB from './database/db';
 import PassportInstance from './passport';
 
@@ -27,9 +26,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use('/api/users', users);
-app.use('/api/exercises', exercises);
-app.use('/api/customExercises', customExercises);
-app.use('/api/nutrition', nutrition);
+app.use('/api/exercises', passport.authenticate('jwt', { session: false }), exercises);
+app.use('/api/customExercises', passport.authenticate('jwt', { session: false }), customExercises);
+app.use('/api/nutrition', passport.authenticate('jwt', { session: false }), nutrition);
 
 app.get('/', (_req, res) => {
   res.send('Hello');

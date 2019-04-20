@@ -1,4 +1,5 @@
 import express from 'express';
+
 import { ErrorState } from 'Types/Errors';
 
 import User from '../models/User';
@@ -9,8 +10,8 @@ enum HttpStatusCode {
 
 const router = express.Router();
 
-router.post('/user', (req, res) => {
-  User.findOne({ username: req.body.username }).then((user: any) => {
+router.get('/user', (req, res) => {
+  User.findOne({ username: req.user.username }).then((user: any) => {
     const errors = {} as ErrorState;
     if (!user) {
       errors.username = 'User not found';
@@ -22,39 +23,35 @@ router.post('/user', (req, res) => {
 });
 
 router.post('/user/add', (req, res) => {
-  const { username, customExerciseName } = req.body as { username: string, customExerciseName: string };
-
+  const { username } = req.user;
   User.findOne({ username }).then((user: any) => {
-    const errors = {} as ErrorState;
+    const errors: ErrorState = {};
 
     if (user == null) {
       errors.username = 'User not found';
       return res.status(HttpStatusCode.ClientError);
     }
 
-    const customExercises = [...user.customExercises] as any;
-    if (customExercises.includes(customExerciseName.toLowerCase())) {
-      console.log("CUSTOM EXERCISE EXISTS");
-      errors.customExercise = 'Exercise already exists';
-      return res.status(HttpStatusCode.ClientError);
+    const { customExercises } = user;
+    const customExerciseName = req.body.customExerciseName.toLowerCase();
+
+    if (customExercises.includes(customExerciseName)) {
+      errors.customExerciseName = 'Exercise already exists';
+      return res.status(HttpStatusCode.ClientError).json(errors);
     }
 
-    User.findOneAndUpdate({ username }, { $push: { customExercises: customExerciseName.toLowerCase() } }, { new: true }, (e, u: any) => {
-      if (e) {
-        return res.status(HttpStatusCode.ClientError).json(e);
-      }
-
-      if (!u) {
-        errors.username = 'Exercises not updated';
-        return res.status(HttpStatusCode.ClientError);
-      }
-      return res.json(u.customExercises);
-    });
+    user.customExercises.push(customExerciseName);
+    user
+      .save()
+      .then((u: any) => {
+        res.json(u.customExercises);
+      })
   });
 });
 
 router.post('/user/delete', (req, res) => {
-  const { username, customExerciseName } = req.body as { username: string, customExerciseName: string };
+  const { customExerciseName } = req.body;
+  const { username } = req.user;
 
   User.findOne({ username }).then((user: any) => {
     const errors = {} as ErrorState;
@@ -63,20 +60,14 @@ router.post('/user/delete', (req, res) => {
       errors.username = 'User not found';
       return res.status(HttpStatusCode.ClientError);
     }
-
-    const customExercises = user.customExercises.filter((c: string) => c !== customExerciseName);
-
-    User.findOneAndUpdate({ username }, { $set: { customExercises } }, { new: true }, (e, u: any) => {
-      if (e) {
-        return res.status(HttpStatusCode.ClientError).json(e);
-      }
-
-      if (!u) {
-        errors.username = 'Exercises not updated';
-        return res.status(HttpStatusCode.ClientError);
-      }
-      return res.json(u.customExercises);
-    });
+    console.log(customExerciseName);
+    console.log(user.customExercises);
+    user.customExercises = user.customExercises.filter((c: string) => c !== customExerciseName);
+    user
+      .save()
+      .then((u: any) => {
+        res.json(u.customExercises);
+      })
   });
 });
 

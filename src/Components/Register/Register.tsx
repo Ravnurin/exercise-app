@@ -34,7 +34,8 @@ function RegisterPage(props: Props) {
     if (auth.isAuthenticated) {
       props.history.push('/');
     }
-  }, [ auth.isAuthenticated, Object.keys(errors).length])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth.isAuthenticated])
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -54,7 +55,7 @@ function RegisterPage(props: Props) {
         <Form name='form' onSubmit={handleSubmit}>
           <FormInput placeholder='Username' value={user.username} name='username' {...formProps} />
           <FormInput placeholder='Password' value={user.password} name='password' type='password' {...formProps} />
-          <FormInput placeholder='Confirm Password' value={user.passwordConfirm} type='password' name='passwordConfirm' {...formProps}/>
+          <FormInput placeholder='Confirm Password' value={user.passwordConfirm} type='password' name='passwordConfirm' {...formProps} />
 
           <FormGroup>
             <Button color='primary' type='submit'>Register</Button>

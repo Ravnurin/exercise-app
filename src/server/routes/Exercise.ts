@@ -10,8 +10,8 @@ enum HttpStatusCode {
 
 const router = express.Router();
 
-router.post('/user', (req, res) => {
-  User.findOne({ username: req.body.username }).then((user: any) => {
+router.get('/user', (req, res) => {
+  User.findOne({ username: req.user.username }).then((user: any) => {
     const errors = {} as ErrorState;
     if (!user) {
       errors.username = 'User not found';
@@ -22,7 +22,8 @@ router.post('/user', (req, res) => {
 });
 
 router.post('/user/update', (req, res) => {
-  const { username, exercises: workout } = req.body;
+  const { exercises: workout } = req.body;
+  const { username } = req.user;
 
   User.findOne({ username }).then((user: any) => {
     const errors = {} as ErrorState;
@@ -33,17 +34,18 @@ router.post('/user/update', (req, res) => {
     const { exercises } = user;
     const exercise = exercises[exercises.length - 1] || {};
 
-    let updateQuery;
     if (exercise.date && moment(exercise.date).startOf('day').isSame(moment(workout.date).startOf('day'))) {
-      const updatedExercises = [...exercises];
-      updatedExercises[exercises.length - 1] = workout;
-
-      updateQuery = { $set: { exercises: updatedExercises } };
+      exercises[exercises.length - 1] = workout;
     } else {
-      updateQuery = { $push: { exercises: workout } };
+      exercises.push(workout);
     }
-
-    User.findOneAndUpdate({ username }, updateQuery, { new: true }, (e, u: any) => {
+    user.exercises = exercises;
+    user
+      .save()
+      .then((u: any) => {
+        res.json(u);
+      })
+    /* User.findOneAndUpdate({ username }, updateQuery, { new: true }, (e, u: any) => {
       if (e) {
         return res.status(HttpStatusCode.ClientError).json(e);
       }
@@ -53,7 +55,7 @@ router.post('/user/update', (req, res) => {
         return res.status(HttpStatusCode.ClientError);
       }
       return res.json(u.exercises);
-    });
+    }); */
   });
 });
 

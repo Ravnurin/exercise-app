@@ -12,7 +12,7 @@ import { updateUserWorkout } from 'ActionCreators/Exercise';
 import { ApplicationState } from 'Reducers';
 
 interface OwnProps {
-  updateUserWorkout: (username: string, exercises: ProgramSchemaLayout) => void;
+  updateUserWorkout: (exercises: ProgramSchemaLayout) => void;
 }
 
 enum MuscleGroup {
@@ -21,11 +21,11 @@ enum MuscleGroup {
 }
 
 
-type Props = OwnProps & Pick<ApplicationState, 'auth' | 'exercises'>;
+type Props = OwnProps & Pick<ApplicationState, 'exercises'>;
 type Page = MuscleGroup.UpperBody | MuscleGroup.LowerBody;
 
 function WorkoutContainer(props: Props) {
-  const { auth, exercises } = props;
+  const { exercises } = props;
   const [currentPage, setCurrentPage] = useState<Page>(MuscleGroup.UpperBody);
 
   const [lowerBodyExercises, setLowerBodyExercises] = useState<LowerBodySchema>(lowerBodyTemplate);
@@ -44,7 +44,7 @@ function WorkoutContainer(props: Props) {
         setUpperBodyExercises(upperBody);
       }
     }
-  }, [exercises.length]);
+  }, [exercises]);
 
   const handleUpperBodyChange = (names: Names, value: string) => {
     if (isNaN(Number(value))) {
@@ -73,7 +73,7 @@ function WorkoutContainer(props: Props) {
       date: moment().startOf('day')
     };
 
-    props.updateUserWorkout(auth.user.username, updatedExericse);
+    props.updateUserWorkout(updatedExericse);
   };
 
   return (

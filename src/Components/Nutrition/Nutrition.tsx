@@ -10,21 +10,22 @@ import NutritionNavigation from './NutritionNavigation';
 import CreateFoodItem from './CreateFoodItem';
 
 interface OwnProps {
-  getUserFoodItems: (username: string) => void;
-  addUserFoodItem: (username: string, foodItem: FoodItem) => void;
+  getUserFoodItems: () => void;
+  addUserFoodItem: (foodItem: FoodItem) => void;
 }
 
 type Props = OwnProps & ApplicationState;
 
 function Nutrition(props: Props) {
-  const { auth, nutrition: { foodItems } } = props;
+  const { nutrition: { foodItems } } = props;
 
   useEffect(() => {
-    props.getUserFoodItems(props.auth.user.username);
-  }, [foodItems.length]);
+    props.getUserFoodItems();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSubmit = (foodItem: FoodItem) => {
-    props.addUserFoodItem(auth.user.username, foodItem);
+    props.addUserFoodItem(foodItem);
   };
 
   return (

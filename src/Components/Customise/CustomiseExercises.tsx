@@ -1,11 +1,13 @@
 import React, { FormEvent, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Input, Label, Form, Button } from 'reactstrap';
+import { Row, Col, Input, Label, Form, Button, FormFeedback } from 'reactstrap';
 import { useFormState } from 'react-use-form-state';
 
 import * as CustomExerciseActions from 'ActionCreators/CustomExercises';
 import { ApplicationState } from 'Reducers';
 import { getCustomExerciseFriendlyName } from '../Helpers/CustomExerciseHelpers';
+import FormGroup from 'reactstrap/lib/FormGroup';
+import classnames from 'classnames';
 
 interface FriendlyNameProps {
   name: string;
@@ -24,49 +26,58 @@ export const FriendlyName = ({ name, onDelete }: FriendlyNameProps) => (
 )
 
 interface OwnProps {
-  getCustomExercises: (username: string) => void;
-  addCustomExercise: (username: string, customExerciseName: string) => void;
-  deleteCustomExercise: (username: string, customExerciseName: string) => void;
+  getCustomExercises: () => void;
+  addCustomExercise: (customExerciseName: string) => void;
+  deleteCustomExercise: (customExerciseName: string) => void;
 }
 
 type Props = OwnProps & ApplicationState;
 
-function CustomiseExercises({ auth, customExercises, getCustomExercises, addCustomExercise, deleteCustomExercise }: Props) {
-  const [formState, { label, text }] = useFormState<{ name: string }>(
-    { name: '' },
+function CustomiseExercises({ errors, customExercises, getCustomExercises, addCustomExercise, deleteCustomExercise }: Props) {
+  const [formState, { label, text }] = useFormState<{ customExerciseName: string }>(
+    { customExerciseName: '' },
     { withIds: true }
   );
 
   useEffect(() => {
-    getCustomExercises(auth.user.username);
+    getCustomExercises();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    addCustomExercise(auth.user.username, formState.values.name);
-    (formState.values.name as any) = '';
+    addCustomExercise(formState.values.customExerciseName);
+    (formState.values.customExerciseName as any) = '';
   };
 
   const handleDelete = (dbName: string) => {
-    deleteCustomExercise(auth.user.username, dbName);
+    deleteCustomExercise(dbName);
   };
 
   return (
     <Row className='justify-content-center'>
       <Col xs={12} md={2} className='col-4 mb-5 mx-auto text-center'>
         <h3>Your saved exercises:</h3>
-        {customExercises.map((f, i) =>
-          <FriendlyName key={`${i}-${name}`} name={f} onDelete={handleDelete} />
+        {customExercises.map((customExerciseName, i) =>
+          <FriendlyName key={`${i}-${customExerciseName}`} name={customExerciseName} onDelete={handleDelete} />
         )}
       </Col>
       <Col xs={12}>
         <Row>
           <Col sm={6} md={2} className='col-4 mx-auto text-center'>
             <Form name='form' onSubmit={handleSubmit}>
-              <Label {...label('name')}>Create a new exercise</Label>
-              <Input {...text('name')} type='text' placeholder='Exercise Name' />
+              <FormGroup>
+                <Label {...label('customExerciseName')}>Create a new exercise</Label>
+                <Input
+                  {...text('customExerciseName')}
+                  type='text'
+                  placeholder='Exercise Name'
+                  className={classnames({ 'is-invalid': errors.customExerciseName })} />
+                <FormFeedback valid={!errors.customExerciseName}>{errors.customExerciseName}</FormFeedback>
 
-              <Button className='mt-3' color='primary' type='submit' disabled={formState.values.name === ''}>Save</Button>
+              </FormGroup>
+
+              <Button className='mt-3' color='primary' type='submit' disabled={formState.values.customExerciseName === ''}>Save</Button>
             </Form>
           </Col>
         </Row>

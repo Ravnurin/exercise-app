@@ -9,8 +9,8 @@ enum HttpStatusCode {
 
 const router = express.Router();
 
-router.post('/user/foodItems', (req, res) => {
-  User.findOne({ username: req.body.username }).then((user: any) => {
+router.get('/user/foodItems', (req, res) => {
+  User.findOne({ username: req.user.username }).then((user: any) => {
     const errors = {} as ErrorState;
     if (!user) {
       errors.username = 'User not found';
@@ -22,8 +22,9 @@ router.post('/user/foodItems', (req, res) => {
 });
 
 router.post('/user/foodItems/add', (req, res) => {
-  const { username, foodItem } = req.body;
-  console.log("Name is: ", foodItem.name);
+  const { foodItem } = req.body;
+  const { username } = req.user;
+
   User.findOneAndUpdate({ username }, { $push: { foodItems: foodItem } }, { new: true }, (e, u: any) => {
     const errors = {} as any;
     if (e) {

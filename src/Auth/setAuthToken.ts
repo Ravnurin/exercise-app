@@ -5,6 +5,11 @@ export const setAuth = (token: any) => {
   setAuthToken(token);
 };
 
+export const removeAuth = () => {
+  localStorage.removeItem('jwtToken');
+  setAuthToken(false);
+}
+
 const setAuthToken = (token: any) => {
   if (token) {
     axios.defaults.headers.common.Authorization = token;

@@ -5,9 +5,9 @@ import { Actions } from 'constants/Nutrition';
 import { Actions as ErrorAction } from 'constants/Authentication';
 import { FoodItem } from 'Types/Nutrition';
 
-export const getUserFoodItems = (username: string) => (dispatch: any) => {
+export const getUserFoodItems = () => (dispatch: any) => {
   axios
-    .post('/api/nutrition/user/foodItems', { username })
+    .get('/api/nutrition/user/foodItems')
     .then(res => {
       dispatch({
         type: Actions.GET_USER_FOOD_ITEMS,
@@ -23,9 +23,9 @@ export const getUserFoodItems = (username: string) => (dispatch: any) => {
     });
 };
 
-export const addUserFoodItem = (username: string, foodItem: FoodItem) => (dispatch: any) => {
+export const addUserFoodItem = (foodItem: FoodItem) => (dispatch: any) => {
   axios
-    .post('/api/nutrition/user/foodItems/add', { username, foodItem })
+    .post('/api/nutrition/user/foodItems/add', { foodItem })
     .then(res => {
       dispatch({
         type: Actions.ADD_USER_FOOD_ITEM,

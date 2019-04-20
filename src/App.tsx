@@ -9,7 +9,7 @@ import { PrivateRoute } from 'Auth/PrivateRoute';
 import { history } from 'Utils/history';
 import store from 'Store';
 
-import { setCurrentUser } from './ActionCreators/Authentication';
+import { setCurrentUser/* , logoutUser */ } from './ActionCreators/Authentication';
 import Header from 'Layout/Header';
 import { Home } from 'Components/Home';
 import { CustomiseExercises } from 'Components/Customise';
@@ -21,8 +21,15 @@ import { Nutrition } from 'Components/Nutrition';
 
 if (localStorage.jwtToken) {
   setAuthToken(localStorage.jwtToken);
-  const decoded = jwt_decode(localStorage.jwtToken);
+  const decoded = jwt_decode<any>(localStorage.jwtToken);
   store.dispatch(setCurrentUser(decoded));
+
+  /* const currentTime = Date.now() / 1000;
+  if (decoded.exp < currentTime) {
+    const logout = logoutUser as any;
+    store.dispatch(logout(history));
+    window.location.href = '/login';
+  } */
 }
 
 export default function App() {

@@ -13,7 +13,7 @@ enum PageView {
 }
 
 interface OwnProps {
-  getUserExercises: (username: string) => void;
+  getUserExercises: () => void;
 }
 
 type Props = OwnProps & ApplicationState;
@@ -22,7 +22,8 @@ function HomePage(props: Props) {
   const [view, setPageView] = useState<PageView>(PageView.Workout);
 
   useEffect(() => {
-    props.getUserExercises(props.auth.user.username);
+    props.getUserExercises();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

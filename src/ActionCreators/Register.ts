@@ -7,7 +7,7 @@ import { SecureUser } from 'Types/User';
 export const registerUser = (user: SecureUser, history: History) => (dispatch: any) => {
   axios.post('/api/users/register', user)
     .then(() => {
-      history.push('/');
+      history.push('/login');
     })
     .catch(err => {
       dispatch({

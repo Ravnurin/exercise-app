@@ -43,7 +43,8 @@ function LoginPage(props: Props) {
         props.history.push('/');
       }
     },
-    [auth.isAuthenticated, Object.keys(errors).length]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [auth.isAuthenticated]
   );
 
   const formProps = { errors, onChange: handleChange };
