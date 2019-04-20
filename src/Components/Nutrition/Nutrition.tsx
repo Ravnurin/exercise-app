@@ -1,13 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col } from 'reactstrap';
+import { Grid } from '@material-ui/core';
 
 import * as NutritionActions from 'ActionCreators/Nutrition';
 import { ApplicationState } from 'Reducers';
 import { FoodItem } from 'Types/Nutrition';
-import DropdownMenu from 'Components/LayoutElements/DropdownMenu';
-import NutritionNavigation from './NutritionNavigation';
+import NutritionNavigation, { View } from './NutritionNavigation';
 import CreateFoodItem from './CreateFoodItem';
+/* import DropdownMenu from 'Components/LayoutElements/DropdownMenu';
+
+ */
+
+
 
 interface OwnProps {
   getUserFoodItems: () => void;
@@ -17,19 +21,50 @@ interface OwnProps {
 type Props = OwnProps & ApplicationState;
 
 function Nutrition(props: Props) {
-  const { nutrition: { foodItems } } = props;
+  const [activeView, setActiveView] = useState<View>(View.FoodItemsList);
+
+  // const { nutrition: { foodItems } } = props;
 
   useEffect(() => {
     props.getUserFoodItems();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSubmit = (foodItem: FoodItem) => {
+  /* const handleSubmit = (foodItem: FoodItem) => {
     props.addUserFoodItem(foodItem);
-  };
+  }; */
+
+  const handleChange = (_e: React.ChangeEvent, newView: View) => {
+    setActiveView(newView);
+  }
 
   return (
-    <Row className='justify-content-center text-center'>
+    <div>
+      <Grid container>
+        <Grid container item justify='center'>
+          <NutritionNavigation onChange={handleChange} value={activeView} />
+        </Grid>
+      </Grid>
+      <Grid container item alignItems='center' direction='column' justify='center'>
+        {activeView === View.FoodItemsList && (
+          <CreateFoodItem errors={props.errors} />
+        )}
+      </Grid>
+    </div>
+  );
+}
+
+const mapStateToProps = ({ auth, nutrition, errors }: ApplicationState) => ({
+  auth,
+  nutrition,
+  errors
+});
+
+export default connect(mapStateToProps, NutritionActions)(Nutrition);
+
+/*
+
+<Row className='justify-content-center text-center'>
       <Col xs={12} className='mb-5'>
         <NutritionNavigation />
       </Col>
@@ -43,14 +78,4 @@ function Nutrition(props: Props) {
           </Col>
         </Row>
       </Col>
-    </Row>
-  );
-}
-
-const mapStateToProps = ({ auth, nutrition, errors }: ApplicationState) => ({
-  auth,
-  nutrition,
-  errors
-});
-
-export default connect(mapStateToProps, NutritionActions)(Nutrition);
+    </Row>*/

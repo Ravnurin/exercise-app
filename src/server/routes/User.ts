@@ -75,7 +75,7 @@ router.post('/login', (req, res) => {
         const payload = { id: user.id, username }
 
         jwt.sign(payload, secret, {
-          expiresIn: 3600
+          expiresIn: 360000
         }, (err, token) => {
           if (err) {
             console.error(`There is some error in token: ${token}`);

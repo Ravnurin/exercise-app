@@ -7,7 +7,7 @@ import store from 'Store';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-redux-toastr/lib/css/react-redux-toastr.min.css';
-import './index.scss';
+import './styles/index.scss';
 
 render((
   <Provider store={store}>

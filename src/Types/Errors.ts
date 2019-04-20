@@ -1,9 +1,12 @@
+import { FoodItem } from './Nutrition';
+
 export interface ErrorState {
   username?: string;
   password?: string;
   passwordConfirm?: string;
   customExerciseName?: string;
-  [key: string]: string | undefined;
+  createFoodItem?: FoodItem;
+  [key: string]: string | undefined | FoodItem;
 }
 
 export interface ErrorAction {

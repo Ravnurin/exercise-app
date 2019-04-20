@@ -16,7 +16,7 @@ import { CustomiseExercises } from 'Components/Customise';
 import { Login } from 'Components/Login';
 import { Register } from 'Components/Register';
 
-import 'App.scss';
+import './styles/App.scss';
 import { Nutrition } from 'Components/Nutrition';
 
 if (localStorage.jwtToken) {
