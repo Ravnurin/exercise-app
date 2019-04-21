@@ -1,11 +1,7 @@
 import React, { FormEvent } from 'react';
 import {
   InputAdornment,
-  /*   FormHelperText,
-    FormControl, */
   TextField,
-  /*   MenuItem,
-    IconButton, */
   Button,
   createStyles,
   Theme,
@@ -13,17 +9,12 @@ import {
   WithStyles,
   Grid
 } from '@material-ui/core';
-// import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { useFormState } from 'react-use-form-state';
 import classNames from 'classnames';
 
 import { FoodItem } from 'Types/Nutrition';
 import { getCalculatedFoodItem } from '../Helpers/NutritionHelpers';
-import { ErrorState } from '../../Types/Errors';
-
-/* interface Props {
-  handleSubmit: (foodItem: FoodItem) => void;
-} */
+import { ErrorState } from 'Types/Errors';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -39,6 +30,7 @@ const styles = (theme: Theme) => createStyles({
 });
 
 interface Props extends WithStyles<typeof styles> {
+  onSubmit: (foodItem: FoodItem) => void;
   errors: ErrorState;
 }
 
@@ -65,8 +57,8 @@ function CreateFoodItem(props: Props) {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // const foodItem = { ...formState.values };
-    // props.handleSubmit(foodItem);
+    const foodItem = { ...formState.values };
+    props.onSubmit(foodItem);
     clearForm();
   };
   const fieldProps = (adornment = true) => ({

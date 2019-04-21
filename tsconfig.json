@@ -20,8 +20,6 @@
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "pretty": true,
-    "skipLibCheck": false,
-    "sourceMap": true,
     "resolveJsonModule": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,

@@ -7,7 +7,9 @@ import { ApplicationState } from 'Reducers';
 import { FoodItem } from 'Types/Nutrition';
 import NutritionNavigation, { View } from './NutritionNavigation';
 import CreateFoodItem from './CreateFoodItem';
+import FoodItemsList from './FoodItemsList';
 /* import DropdownMenu from 'Components/LayoutElements/DropdownMenu';
+
 
  */
 
@@ -23,16 +25,16 @@ type Props = OwnProps & ApplicationState;
 function Nutrition(props: Props) {
   const [activeView, setActiveView] = useState<View>(View.FoodItemsList);
 
-  // const { nutrition: { foodItems } } = props;
+  const { nutrition: { foodItems } } = props;
 
   useEffect(() => {
     props.getUserFoodItems();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /* const handleSubmit = (foodItem: FoodItem) => {
+  const handleSubmit = (foodItem: FoodItem) => {
     props.addUserFoodItem(foodItem);
-  }; */
+  };
 
   const handleChange = (_e: React.ChangeEvent, newView: View) => {
     setActiveView(newView);
@@ -46,9 +48,8 @@ function Nutrition(props: Props) {
         </Grid>
       </Grid>
       <Grid container item alignItems='center' direction='column' justify='center'>
-        {activeView === View.FoodItemsList && (
-          <CreateFoodItem errors={props.errors} />
-        )}
+        {activeView === View.FoodItemsList && <FoodItemsList foodItems={foodItems} />}
+        {activeView === View.CreateFoodItem && <CreateFoodItem onSubmit={handleSubmit} errors={props.errors} />}
       </Grid>
     </div>
   );
