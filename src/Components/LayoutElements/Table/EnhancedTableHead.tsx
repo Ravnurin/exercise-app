@@ -19,11 +19,11 @@ interface Props {
 }
 
 const rows = [
-  { id: 'name', numeric: false, disablePadding: true, label: 'Dessert (100g serving)' },
-  { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
-  { id: 'fat', numeric: true, disablePadding: false, label: 'Fat (g)' },
-  { id: 'carbs', numeric: true, disablePadding: false, label: 'Carbs (g)' },
-  { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' },
+  { id: 'name', align: 'left', disablePadding: true, label: 'Dessert (100g serving)' },
+  { id: 'calories', align: 'right', disablePadding: false, label: 'Calories' },
+  { id: 'fats', align: 'right', disablePadding: false, label: 'Fat (g)' },
+  { id: 'carbohydrates', align: 'right', disablePadding: false, label: 'Carbohydrates (g)' },
+  { id: 'protein', align: 'right', disablePadding: false, label: 'Protein (g)' },
 ];
 
 
@@ -33,26 +33,27 @@ export default function EnhancedTableHead(props: Props) {
     onRequestSort(event, property);
   };
 
+
   return (
     <TableHead>
       <TableRow>
         <TableCell padding="checkbox">
           <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={numSelected === rowCount}
+            checked={numSelected === rowCount && rowCount !== 0}
             onChange={onSelectAllClick}
           />
         </TableCell>
         {rows.map(row => (
           <TableCell
             key={row.id}
-            numeric={row.numeric}
+            align={row.align as 'right'}
             padding={row.disablePadding ? 'none' : 'default'}
             sortDirection={orderBy === row.id ? order : false}
           >
             <Tooltip
               title="Sort"
-              placement={row.numeric ? 'bottom-end' : 'bottom-start'}
+              placement={row.align ? 'bottom-end' : 'bottom-start'}
               enterDelay={300}
             >
               <TableSortLabel

@@ -3,6 +3,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import passport from 'passport';
+import path from 'path';
 
 import users from './routes/User';
 import exercises from './routes/Exercise';
@@ -30,8 +31,10 @@ app.use('/api/exercises', passport.authenticate('jwt', { session: false }), exer
 app.use('/api/customExercises', passport.authenticate('jwt', { session: false }), customExercises);
 app.use('/api/nutrition', passport.authenticate('jwt', { session: false }), nutrition);
 
+app.use(express.static(path.join(__dirname, 'build')));
+
 app.get('/', (_req, res) => {
-  res.send('Hello');
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 const PORT = process.env.PORT || 5000;

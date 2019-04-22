@@ -1,6 +1,7 @@
 import { Actions } from 'constants/Nutrition';
 
 export interface FoodItem {
+  id?: number;
   name: string;
   servingSize: string;
   carbohydrates: number | string;

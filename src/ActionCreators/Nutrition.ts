@@ -19,7 +19,7 @@ export const getUserFoodItems = () => (dispatch: any) => {
         type: ErrorAction.GET_ERRORS,
         payload: err.response
       });
-      toastr.error('Retrieval Failed', 'Retrieving user defined food items failed.');
+      toastr.error('Failed', 'Retrieving user food items failed');
     });
 };
 
@@ -31,13 +31,32 @@ export const addUserFoodItem = (foodItem: FoodItem) => (dispatch: any) => {
         type: Actions.ADD_USER_FOOD_ITEM,
         payload: res.data
       });
-      toastr.success('Update food items Success', '');
+      toastr.success('Success', 'Food item added');
     })
     .catch(err => {
       dispatch({
         type: ErrorAction.GET_ERRORS,
         payload: err.response
       });
-      toastr.error('Update Failed', 'Adding food item failed.');
+      toastr.error('Failed', 'Adding food item failed');
+    });
+};
+
+export const deleteUserFoodItem = (foodItemIds: number[]) => (dispatch: any) => {
+  axios
+    .post('/api/nutrition/user/foodItems/delete', { foodItemIds })
+    .then(res => {
+      dispatch({
+        type: Actions.DELETE_USER_FOOD_ITEM,
+        payload: res.data
+      });
+      toastr.success('Success', 'Food item removed');
+    })
+    .catch(err => {
+      dispatch({
+        type: ErrorAction.GET_ERRORS,
+        payload: err.response
+      });
+      toastr.error('Failed', 'Deleting food item failed');
     });
 };

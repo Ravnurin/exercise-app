@@ -8,16 +8,11 @@ import { FoodItem } from 'Types/Nutrition';
 import NutritionNavigation, { View } from './NutritionNavigation';
 import CreateFoodItem from './CreateFoodItem';
 import FoodItemsList from './FoodItemsList';
-/* import DropdownMenu from 'Components/LayoutElements/DropdownMenu';
-
-
- */
-
-
 
 interface OwnProps {
   getUserFoodItems: () => void;
   addUserFoodItem: (foodItem: FoodItem) => void;
+  deleteUserFoodItem: (foodItemIds: number[]) => void;
 }
 
 type Props = OwnProps & ApplicationState;
@@ -36,6 +31,10 @@ function Nutrition(props: Props) {
     props.addUserFoodItem(foodItem);
   };
 
+  const handleDelete = (foodItemIds: number[]) => {
+    props.deleteUserFoodItem(foodItemIds);
+  };
+
   const handleChange = (_e: React.ChangeEvent, newView: View) => {
     setActiveView(newView);
   }
@@ -48,7 +47,7 @@ function Nutrition(props: Props) {
         </Grid>
       </Grid>
       <Grid container item alignItems='center' direction='column' justify='center'>
-        {activeView === View.FoodItemsList && <FoodItemsList foodItems={foodItems} />}
+        {activeView === View.FoodItemsList && <FoodItemsList foodItems={foodItems} handleDelete={handleDelete} />}
         {activeView === View.CreateFoodItem && <CreateFoodItem onSubmit={handleSubmit} errors={props.errors} />}
       </Grid>
     </div>

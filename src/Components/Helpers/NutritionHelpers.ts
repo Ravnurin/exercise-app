@@ -15,6 +15,6 @@ export const getCalculatedFoodItem = (foodItem: FoodItem): Pick<FoodItem, 'calor
     protein: proteinCals,
     carbohydrates: carbCals,
     fats: fatCals,
-    calories: proteinCals + carbCals + fatCals
+    calories: Math.round((proteinCals + carbCals + fatCals + 0.00001) * 100) / 100
   }
 };

@@ -9,10 +9,7 @@
     "importHelpers": true,
     "isolatedModules": true,
     "jsx": "react",
-    "lib": [
-      "es6",
-      "dom"
-    ],
+    "lib": ["es6", "dom"],
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmit": true,
@@ -20,12 +17,11 @@
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "pretty": true,
+    "skipLibCheck": false,
     "resolveJsonModule": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
     "target": "esnext"
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

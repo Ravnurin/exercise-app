@@ -1,7 +1,7 @@
 import React from 'react';
 import { Router, Route } from 'react-router-dom';
 import ReduxToastr from 'react-redux-toastr';
-import { Container, Jumbotron } from 'reactstrap';
+import { Grid, createStyles, withStyles, WithStyles, Theme } from '@material-ui/core';
 import jwt_decode from 'jwt-decode';
 
 import setAuthToken from 'Auth/setAuthToken';
@@ -32,7 +32,20 @@ if (localStorage.jwtToken) {
   } */
 }
 
-export default function App() {
+const styles = (theme: Theme) => createStyles({
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    padding: theme.spacing.unit * 2,
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  },
+});
+
+interface Props extends WithStyles<typeof styles> { }
+
+function App({ classes }: Props) {
   const getToastr = () => {
     return (
       <ReduxToastr
@@ -47,10 +60,10 @@ export default function App() {
     );
   }
   return (
-    <Jumbotron>
-      <Container fluid className='App' style={{ marginTop: '5rem' }}>
-        <Router history={history}>
-          <div>
+    <div className={classes.root}>
+      <Grid container className='App' spacing={24}>
+        <Grid item xs={12}>
+          <Router history={history}>
             <Header />
             {getToastr()}
             <PrivateRoute exact path='/' component={Home} />
@@ -58,9 +71,11 @@ export default function App() {
             <PrivateRoute exact path='/nutrition' component={Nutrition} />
             <Route path='/register' component={Register} />
             <Route path='/login' component={Login} />
-          </div>
-        </Router>
-      </Container>
-    </Jumbotron>
+          </Router>
+        </Grid>
+      </Grid>
+    </div>
   );
 }
+
+export default withStyles(styles)(App);

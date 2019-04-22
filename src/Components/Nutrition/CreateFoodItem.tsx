@@ -42,8 +42,7 @@ function CreateFoodItem(props: Props) {
       servingSize: '',
       carbohydrates: '',
       fats: '',
-      protein: '',
-      calories: ''
+      protein: ''
     },
     { withIds: true }
   );
@@ -54,13 +53,6 @@ function CreateFoodItem(props: Props) {
     });
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const foodItem = { ...formState.values };
-    props.onSubmit(foodItem);
-    clearForm();
-  };
   const fieldProps = (adornment = true) => ({
     className: classNames(classes.margin, classes.textField),
     InputProps: adornment ? {
@@ -78,12 +70,20 @@ function CreateFoodItem(props: Props) {
     { label: 'Calories', id: 'calories', ...fieldProps(), ...number('calories'), value: getCalculatedFoodItem(formState.values).calories, disabled: true },
   ]
 
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const foodItem = { ...formState.values, calories: textFields.filter(t => t.label === 'Calories')[0].value };
+    props.onSubmit(foodItem);
+    clearForm();
+  };
+
   return (
     <form name='form' onSubmit={handleSubmit} className={classes.root}>
       <Grid container direction='row' justify='center'>
         {textFields.map(tf => (
           <Grid item key={tf.id} sm={3}>
-            <TextField {...tf} error={errors[tf.id] != null} />
+            <TextField {...tf} error={errors[tf.id] != null} /* { ...tf.name === 'calories' ? {value: getCalculatedFoodItem(formState.values).calories} : {}} *//>
           </Grid>
         ))}
         <Grid container justify='center'>

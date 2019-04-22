@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, MouseEvent } from 'react';
+import React, { useState, ChangeEvent } from "react";
 import {
   createStyles,
   Checkbox,
@@ -9,54 +9,59 @@ import {
   TableRow,
   Theme,
   withStyles,
-  WithStyles,
-} from '@material-ui/core';
+  WithStyles
+} from "@material-ui/core";
 
-import { createTableData, getSorting, stableSort } from '../Helpers/TableHelpers';
-import { FoodItem } from 'Types/Nutrition';
-import EnhancedTableToolbar from './EnhancedTableToolbar';
-import EnhancedTableHead from './EnhancedTableHead';
+import {
+  getSorting,
+  stableSort
+} from "../Helpers/TableHelpers";
+import { FoodItem } from "Types/Nutrition";
+import EnhancedTableToolbar from "./EnhancedTableToolbar";
+import EnhancedTableHead from "./EnhancedTableHead";
 
-const styles = (theme: Theme) => createStyles({
-  root: {
-    width: '100%',
-    marginTop: theme.spacing.unit * 3,
-  },
-  table: {
-    minWidth: 1020,
-  },
-  tableWrapper: {
-    overflowX: 'auto',
-  },
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      width: "100%",
+      marginTop: theme.spacing.unit * 3
+    },
+    table: {
+      minWidth: 1020
+    },
+    tableWrapper: {
+      overflowX: "auto"
+    }
+  });
+
 
 interface Props extends WithStyles<typeof styles> {
   options: FoodItem[];
+  onDelete: (foodItemIds: number[]) => void;
 }
 
 function EnhancedTable(props: Props) {
-  const { classes, options } = props;
-  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
-  const [orderBy, setOrderBy] = useState<any>('calories');
-  const [selected, setSelected] = useState<any[]>([]);
-  const [data] = useState(createTableData(options))
+  const { classes, options, onDelete } = props;
+  const [order, setOrder] = useState<"asc" | "desc">("desc");
+  const [orderBy, setOrderBy] = useState<any>("calories");
+  const [selected, setSelected] = useState<number[]>([]);
 
   const handleRequestSort = (e: any, property: any) => {
-    const isDesc = orderBy === property && order === 'desc';
-    setOrder(isDesc ? 'asc' : 'desc');
+    const isDesc = orderBy === property && order === "desc";
+    setOrder(isDesc ? "asc" : "desc");
     setOrderBy(property);
-  }
+  };
 
   const handleSelectAllClick = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      const newSelectedIds = data.map(d => d.id);
+      const newSelectedIds = options.map(d => d.id!);
       setSelected(newSelectedIds);
     } else {
       setSelected([]);
     }
   };
 
-  const handleClick = (e: MouseEvent<HTMLTableRowElement>, id: number) => {
+  const handleClick = (id: number) => {
     const selectedIndex = selected.indexOf(id);
     let newSelected: any[] = [];
 
@@ -69,7 +74,7 @@ function EnhancedTable(props: Props) {
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
+        selected.slice(selectedIndex + 1)
       );
     }
 
@@ -80,7 +85,7 @@ function EnhancedTable(props: Props) {
 
   return (
     <Paper className={classes.root}>
-      <EnhancedTableToolbar numSelected={selected.length} />
+      <EnhancedTableToolbar numSelected={selected.length} onDelete={() => onDelete(selected)}/>
       <div className={classes.tableWrapper}>
         <Table className={classes.table} aria-labelledby="tableTitle">
           <EnhancedTableHead
@@ -89,34 +94,34 @@ function EnhancedTable(props: Props) {
             orderBy={orderBy}
             onSelectAllClick={handleSelectAllClick}
             onRequestSort={handleRequestSort}
-            rowCount={data.length} />
+            rowCount={options.length}
+          />
           <TableBody>
-            {stableSort(data, getSorting(order, orderBy))
-              .map(n => {
-                const isItemSelected = isSelected(n.id);
-                return (
-                  <TableRow
-                    hover
-                    onClick={event => handleClick(event, n.id)}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={n.id}
-                    selected={isItemSelected}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox checked={isItemSelected} />
-                    </TableCell>
-                    <TableCell component="th" scope="row" padding="none">
-                      {n.name}
-                    </TableCell>
-                    <TableCell numeric>{n.calories}</TableCell>
-                    <TableCell numeric>{n.fat}</TableCell>
-                    <TableCell numeric>{n.carbs}</TableCell>
-                    <TableCell numeric>{n.protein}</TableCell>
-                  </TableRow>
-                );
-              })}
+            {stableSort(options, getSorting(order, orderBy)).map((n: FoodItem) => {
+              const isItemSelected = isSelected(n.id!);
+              return (
+                <TableRow
+                  hover
+                  onClick={() => handleClick(n.id!)}
+                  role="checkbox"
+                  aria-checked={isItemSelected}
+                  tabIndex={-1}
+                  key={n.id}
+                  selected={isItemSelected}
+                >
+                  <TableCell padding="checkbox">
+                    <Checkbox checked={isItemSelected} />
+                  </TableCell>
+                  <TableCell component="th" scope="row" padding="none">
+                    {n.name}
+                  </TableCell>
+                  <TableCell align='right'>{n.calories}</TableCell>
+                  <TableCell align='right'>{n.fats}</TableCell>
+                  <TableCell align='right'>{n.carbohydrates}</TableCell>
+                  <TableCell align='right'>{n.protein}</TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </div>

@@ -19,6 +19,11 @@ const nutritionReducer: Reducer<NutritionState, NutritionAction> = (state = init
         ...state,
         foodItems: action.payload
       };
+    case Actions.DELETE_USER_FOOD_ITEM:
+      return {
+        ...state,
+        foodItems: action.payload
+      };
     default:
       return state;
   }
