@@ -1,105 +1,100 @@
-import React/* , { MouseEvent, useState } */ from 'react';
+import React, { MouseEvent } from 'react';
 import { connect } from 'react-redux';
-import { NavLink, withRouter, RouteComponentProps } from 'react-router-dom';
-/* import { Collapse, Nav, Navbar, NavbarToggler, NavItem } from 'reactstrap'; */
+import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import { History } from 'history';
-import { AppBar, Toolbar, Typography, Button, IconButton, createStyles, withStyles, WithStyles } from '@material-ui/core';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  IconButton,
+  Theme
+} from '@material-ui/core';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { Menu as MenuIcon } from '@material-ui/icons';
 
 import { logoutUser } from 'ActionCreators/Authentication';
-import './Header.scss';
 import { ApplicationState } from 'Reducers';
 
-
-/* const getUrl = (url: string) => `/${url}`;
-const getNavLink = (children: JSX.Element | any[] | string, { route = '', ...props }) =>
-  <NavLink to={getUrl(route)} className='nav-link' activeClassName='active' {...props}>{children}</NavLink>; */
-
-interface OwnProps extends WithStyles<typeof styles> {
+interface OwnProps {
   logoutUser: (history: History) => void;
 }
 
 type Props = OwnProps & RouteComponentProps & ApplicationState;
 
-const styles = createStyles({
-  root: {
-    flexGrow: 1,
-  },
-  grow: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
-  },
-});
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1
+    },
+    menuButton: {
+      marginRight: theme.spacing(2)
+    },
+    title: {
+      flexGrow: 1
+    }
+  })
+);
+
+const getLink = (name: string, props: any) => (
+  <Button key={name} component={props.to && Link} color='inherit' {...props}>
+    {name}
+  </Button>
+);
 
 function Header(props: Props) {
-  const { classes } = props;
-  const { isAuthenticated } = props.auth;
-  /* const [isOpen, setIsOpen] = useState(false); */
+  const classes = useStyles();
+  const { auth, history, location } = props;
+  const { isAuthenticated } = auth;
 
-  /* const handleLogout = (e: MouseEvent<HTMLAnchorElement>) => {
+  const handleLogout = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    props.logoutUser(props.history);
-  } */
-
-  /* const getAuthLinks = () => {
-    const links = [
-      { name: 'Customise', route: 'customise', props: {} },
-      { name: 'Nutrition', route: 'nutrition', props: {} },
-      { name: 'Logout', route: '#', onClick: (e: any) => handleLogout(e) }
-    ];
-    return links.map((l, index: number) => <NavItem key={`${index}-${l.name}`}>{getNavLink(l.name, { route: l.route, key: `${l.name}-${index}`, ...l })}</NavItem>);
-  }
+    props.logoutUser(history);
+  };
 
   const getGuestLinks = () => {
     const links = [
-      { name: 'Register', route: 'register' },
-      { name: 'Login', route: 'login' }
-    ];
-    return links.map((l, index: number) => <NavItem key={`${index}-${l.name}`}>{getNavLink(l.name, { route: l.route, key: `${l.name}-${index}` })}</NavItem>);
-  };
-
-  const guestLinks = getGuestLinks();
-  const authLinks = getAuthLinks(); */
-
-  const getGuestLinks = () => {
-    const links = [
-      { name: 'Register', route: 'register' },
-      { name: 'Login', route: 'login' }
+      { name: 'Login', props: { to: '/login', component: Link } },
+      { name: 'Register', props: { to: '/register', component: Link } }
     ];
 
-    return links.map(l => (
-      <Button key={`${l.name}-${l.route}`} color='inherit'>
-        <NavLink to={`/${l.route}`} style={{ color: 'inherit', textDecoration: 'none'}}>{l.name}</NavLink>
-      </Button>
-    ));
+    return links.map(l => getLink(l.name, l.props));
   };
-
   const getAuthLinks = () => {
     const links = [
-      { name: 'Customise', route: 'customise', props: {} },
-      { name: 'Nutrition', route: 'nutrition', props: {} }/* ,
-      { name: 'Logout', route: '#', onClick: (e: any) => handleLogout(e) } */
+      { name: 'Home', props: { to: '/' } },
+      { name: 'Customise', props: { to: '/customise' } },
+      { name: 'Nutrition', props: { to: '/nutrition' } },
+      {
+        name: 'Logout',
+        props: {
+          onClick: (e: MouseEvent<HTMLButtonElement>) => handleLogout(e)
+        }
+      }
     ];
 
-    return links.map(l => (
-      <Typography variant='h6' color='inherit' className={classes.grow}>
-        <NavLink to={`/${l.route}`} {...l.props}>{l.name}</NavLink>
-      </Typography>
-    ));
+    return links.map(l => getLink(l.name, l.props));
   };
+
+  const pageTitle =
+    location.pathname === '/'
+      ? 'Home'
+      : `${location.pathname[1].toUpperCase()}${location.pathname.slice(2)}`;
 
   return (
     <div className={classes.root}>
-      <AppBar position='static'>
+      <AppBar position='static' color='primary'>
         <Toolbar>
-          <IconButton className={classes.menuButton} color='inherit' aria-label='menu'>
+          <IconButton
+            className={classes.menuButton}
+            color='inherit'
+            aria-label='Menu'>
             <MenuIcon />
           </IconButton>
-
-          { isAuthenticated ? getAuthLinks() : getGuestLinks() }
+          <Typography variant='h6' color='inherit' className={classes.title}>
+            {pageTitle}
+          </Typography>
+          {isAuthenticated ? getAuthLinks() : getGuestLinks()}
         </Toolbar>
       </AppBar>
     </div>
@@ -110,20 +105,7 @@ const mapStateToProps = ({ auth }: Partial<ApplicationState>) => ({
   auth
 });
 
-export default connect(mapStateToProps, { logoutUser })(withRouter(withStyles(styles)(Header) as any));
-
-/* <header className='header'>
-      <div>
-        <Navbar color='dark' dark expand='md' fixed='top' id='mainNav'>
-          <NavbarToggler onClick={() => setIsOpen(!isOpen)} />
-          <Collapse isOpen={isOpen} navbar>
-            <Nav className='mx-auto' navbar>
-              <NavItem>
-                {getNavLink('Home', {})}
-              </NavItem>
-              {isAuthenticated ? authLinks : guestLinks}
-            </Nav>
-          </Collapse>
-        </Navbar>
-      </div>
-    </header> */
+export default connect(
+  mapStateToProps,
+  { logoutUser }
+)(withRouter(Header) as any);

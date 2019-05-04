@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Button, Row, Col } from 'reactstrap';
+import { Tab, Tabs, Paper, Theme } from '@material-ui/core';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
 
 import { getUserExercises } from 'ActionCreators/Exercise';
 import { ApplicationState } from 'Reducers';
 import { WorkoutContainer } from './Workout';
 import { WorkoutHistory } from './WorkoutHistory';
 
-enum PageView {
-  'History',
-  'Workout'
+enum View {
+  'Workout' = 1,
+  'History' = 0
 }
 
 interface OwnProps {
@@ -18,8 +19,18 @@ interface OwnProps {
 
 type Props = OwnProps & ApplicationState;
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+      marginBottom: theme.spacing(4)
+    }
+  })
+);
+
 function HomePage(props: Props) {
-  const [view, setPageView] = useState<PageView>(PageView.Workout);
+  const classes = useStyles();
+  const [tab, setTab] = useState<View>(View.Workout);
 
   useEffect(() => {
     props.getUserExercises();
@@ -27,25 +38,34 @@ function HomePage(props: Props) {
   }, []);
 
   return (
-    <div>
-      <Row className='mb-5'>
-        <Col xs={12} sm={6} className='col-4 mx-auto text-center'>
-          <Button color='primary' className='mx-4' onClick={() => setPageView(PageView.Workout)}>Workout</Button>
-          <Button color='primary' onClick={() => setPageView(PageView.History)}>History</Button>
-        </Col>
-      </Row>
-      {view === PageView.Workout
-        ? <WorkoutContainer />
-        : <WorkoutHistory />
-      }
-    </div>
+    <>
+      <Paper square className={classes.root}>
+        <Tabs
+          value={tab}
+          indicatorColor='primary'
+          textColor='primary'
+          centered
+          onChange={(e, value) => setTab(value)}>
+          <Tab label='Workout' value={View.Workout} />
+          <Tab label='History' value={View.History} />
+        </Tabs>
+      </Paper>
+      {tab === View.Workout ? <WorkoutContainer /> : <WorkoutHistory />}
+    </>
   );
 }
 
-const mapStateToProps = ({ auth, errors, exercises }: Partial<ApplicationState>) => ({
+const mapStateToProps = ({
+  auth,
+  errors,
+  exercises
+}: Partial<ApplicationState>) => ({
   auth,
   errors,
   exercises
 });
 
-export default connect(mapStateToProps, { getUserExercises })(HomePage);
+export default connect(
+  mapStateToProps,
+  { getUserExercises }
+)(HomePage);

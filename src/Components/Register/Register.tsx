@@ -1,15 +1,21 @@
-import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
+import React, { useState, useEffect, MouseEvent } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import Row from 'reactstrap/lib/Row';
-import { Col, Form, FormGroup, Button } from 'reactstrap';
+import {
+  Avatar,
+  Button,
+  CssBaseline,
+  Paper,
+  Typography
+} from '@material-ui/core';
+import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
 
 import { registerUser } from 'ActionCreators/Register';
 import FormInput from 'Components/LayoutElements/FormInput';
 import { AuthState } from 'Types/Authentication';
 import { ErrorState } from 'Types/Errors';
-import { SecureUser } from 'Types/User';
 import { ApplicationState } from 'Reducers/index';
+import useStyles from 'material/styles';
 
 interface Props {
   auth: AuthState;
@@ -18,51 +24,69 @@ interface Props {
   registerUser: (user: any, history: string[]) => void;
 }
 
-interface RegisterUser extends SecureUser {
-  passwordConfirm: string;
-}
-
 function RegisterPage(props: Props) {
+  const classes = useStyles();
   const { auth, errors } = props;
-  const [user, setUser] = useState<RegisterUser>({
-    username: '',
-    password: '',
-    passwordConfirm: ''
-  });
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
 
   useEffect(() => {
     if (auth.isAuthenticated) {
       props.history.push('/');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth.isAuthenticated])
+  }, [auth.isAuthenticated, props.history]);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
+  const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    props.registerUser({ username, password, passwordConfirm }, props.history);
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    props.registerUser(user, props.history);
-  }
-
-  const formProps = { onChange: handleChange, errors };
   return (
-    <Row className='justify-content-center'>
-      <Col xs={12} md={4}>
-        <h2>Register</h2>
-        <Form name='form' onSubmit={handleSubmit}>
-          <FormInput placeholder='Username' value={user.username} name='username' {...formProps} />
-          <FormInput placeholder='Password' value={user.password} name='password' type='password' {...formProps} />
-          <FormInput placeholder='Confirm Password' value={user.passwordConfirm} type='password' name='passwordConfirm' {...formProps} />
-
-          <FormGroup>
-            <Button color='primary' type='submit'>Register</Button>
-          </FormGroup>
-        </Form>
-      </Col>
-    </Row>
+    <main className={classes.main}>
+      <CssBaseline />
+      <Paper className={classes.paper}>
+        <Avatar className={classes.avatar}>
+          <CreateOutlinedIcon />
+        </Avatar>
+        <Typography component='h1' variant='h5'>
+          Register
+        </Typography>
+        <FormInput
+          autoFocus
+          name='username'
+          onChange={e => setUsername(e.target.value)}
+          placeholder='Username'
+          value={username}
+          errors={errors}
+        />
+        <FormInput
+          name='password'
+          onChange={e => setPassword(e.target.value)}
+          placeholder='Password'
+          type='password'
+          value={password}
+          errors={errors}
+        />
+        <FormInput
+          name='passwordConfirm'
+          onChange={e => setPasswordConfirm(e.target.value)}
+          placeholder='Confirm Password'
+          type='password'
+          value={passwordConfirm}
+          errors={errors}
+        />
+        <Button
+          type='submit'
+          fullWidth
+          variant='contained'
+          color='primary'
+          onClick={handleSubmit}
+          className={classes.submit}>
+          Register
+        </Button>
+      </Paper>
+    </main>
   );
 }
 
@@ -71,4 +95,7 @@ const mapStateToProps = (state: ApplicationState) => ({
   errors: state.errors
 });
 
-export default connect(mapStateToProps, { registerUser })(withRouter(RegisterPage as any));
+export default connect(
+  mapStateToProps,
+  { registerUser }
+)(withRouter(RegisterPage as any));

@@ -1,35 +1,52 @@
-import React, { useEffect, useState, FormEvent } from 'react';
-import { Col, Row, Form, FormGroup, Button } from 'reactstrap';
+import React, { useEffect, useState, MouseEvent } from 'react';
 import moment from 'moment';
+import {
+  Button,
+  Grid,
+  Radio,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  RadioGroup
+} from '@material-ui/core';
 
 import UpperBody, { upperBodyTemplate } from './UpperBody';
 import LowerBody, { lowerBodyTemplate } from './LowerBody';
 import { Names } from './Exercise';
 import { getUpdatedExercises } from 'Components/Helpers/HomeHelpers';
-import { ProgramSchemaLayout, UpperBodySchema, LowerBodySchema } from 'Types/Program';
+import {
+  ProgramSchemaLayout,
+  UpperBodySchema,
+  LowerBodySchema
+} from 'Types/Program';
 import { connect } from 'react-redux';
 import { updateUserWorkout } from 'ActionCreators/Exercise';
 import { ApplicationState } from 'Reducers';
+import useStyles from 'material/styles';
 
 interface OwnProps {
   updateUserWorkout: (exercises: ProgramSchemaLayout) => void;
 }
 
 enum MuscleGroup {
-  'UpperBody',
-  'LowerBody'
+  'UpperBody' = 'UpperBody',
+  'LowerBody' = 'LowerBody'
 }
-
 
 type Props = OwnProps & Pick<ApplicationState, 'exercises'>;
 type Page = MuscleGroup.UpperBody | MuscleGroup.LowerBody;
 
 function WorkoutContainer(props: Props) {
+  const classes = useStyles();
   const { exercises } = props;
   const [currentPage, setCurrentPage] = useState<Page>(MuscleGroup.UpperBody);
 
-  const [lowerBodyExercises, setLowerBodyExercises] = useState<LowerBodySchema>(lowerBodyTemplate);
-  const [upperBodyExercises, setUpperBodyExercises] = useState<UpperBodySchema>(upperBodyTemplate);
+  const [lowerBodyExercises, setLowerBodyExercises] = useState<LowerBodySchema>(
+    lowerBodyTemplate
+  );
+  const [upperBodyExercises, setUpperBodyExercises] = useState<UpperBodySchema>(
+    upperBodyTemplate
+  );
 
   useEffect(() => {
     const workout = exercises[exercises.length - 1] || {};
@@ -50,7 +67,11 @@ function WorkoutContainer(props: Props) {
     if (isNaN(Number(value))) {
       return;
     }
-    const updatedExercises = getUpdatedExercises<UpperBodySchema>({ exerciseGroup: upperBodyExercises, names, value });
+    const updatedExercises = getUpdatedExercises<UpperBodySchema>({
+      exerciseGroup: upperBodyExercises,
+      names,
+      value
+    });
 
     setUpperBodyExercises(updatedExercises);
   };
@@ -59,12 +80,16 @@ function WorkoutContainer(props: Props) {
     if (isNaN(Number(value))) {
       return;
     }
-    const updatedExercises = getUpdatedExercises<LowerBodySchema>({ exerciseGroup: lowerBodyExercises, names, value });
+    const updatedExercises = getUpdatedExercises<LowerBodySchema>({
+      exerciseGroup: lowerBodyExercises,
+      names,
+      value
+    });
 
     setLowerBodyExercises(updatedExercises);
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     const updatedExericse: ProgramSchemaLayout = {
@@ -77,32 +102,59 @@ function WorkoutContainer(props: Props) {
   };
 
   return (
-    <Row className='justify-content-center'>
-      <Col xs={12} sm={6} className='col-4 mx-auto text-center'>
-        <Button color='primary' className='mx-4' onClick={() => setCurrentPage(MuscleGroup.UpperBody)}>
-          Upper Body
-        </Button>
-        <Button color='primary' onClick={() => setCurrentPage(MuscleGroup.LowerBody)}>
-          Lower Body
-        </Button>
-      </Col>
-      <Col xs={12} md={12}>
-        <Form name='form' onSubmit={handleSubmit}>
+    <Grid container spacing={0} justify='center' alignItems='center'>
+      <Grid item sm={12} style={{ textAlign: 'center' }}>
+        <FormControl component='fieldset' className={classes.formControl}>
+          <FormLabel component='legend'>Workout Split</FormLabel>
+          <RadioGroup
+            aria-label='workout-split'
+            name='workout-split'
+            className={classes.group}
+            value={currentPage}
+            onChange={(e: any) => setCurrentPage(e.target.value)}
+            row>
+            <FormControlLabel
+              value={MuscleGroup.UpperBody}
+              control={<Radio />}
+              label='Upper Body'
+            />
+            <FormControlLabel
+              value={MuscleGroup.LowerBody}
+              control={<Radio />}
+              label='Lower Body'
+            />
+          </RadioGroup>
+        </FormControl>
+      </Grid>
+      <form className={classes.form}>
+        <Grid item xs={12}>
           {currentPage === MuscleGroup.UpperBody ? (
-            <UpperBody onChange={handleUpperBodyChange} upperBody={upperBodyExercises} />
+            <UpperBody
+              onChange={handleUpperBodyChange}
+              upperBody={upperBodyExercises}
+            />
           ) : (
-              <LowerBody onChange={handleLowerBodyChange} lowerBody={lowerBodyExercises} />
-            )}
-          {(upperBodyExercises || lowerBodyExercises) && (
-            <FormGroup className='text-center'>
-              <Button color='primary' type='submit'>
-                Save
-              </Button>
-            </FormGroup>
+            <LowerBody
+              onChange={handleLowerBodyChange}
+              lowerBody={lowerBodyExercises}
+            />
           )}
-        </Form>
-      </Col>
-    </Row>
+        </Grid>
+        {(upperBodyExercises || lowerBodyExercises) && (
+          <Grid container item xs={6} md={3} lg={2} justify='center'>
+            <Button
+              type='submit'
+              fullWidth
+              variant='contained'
+              color='primary'
+              onClick={handleSubmit}
+              className={classes.submit}>
+              Submit
+            </Button>
+          </Grid>
+        )}
+      </form>
+    </Grid>
   );
 }
 
@@ -111,4 +163,7 @@ const mapStateToProps = ({ auth, exercises }: ApplicationState) => ({
   exercises
 });
 
-export default connect(mapStateToProps, { updateUserWorkout })(WorkoutContainer);
+export default connect(
+  mapStateToProps,
+  { updateUserWorkout }
+)(WorkoutContainer);

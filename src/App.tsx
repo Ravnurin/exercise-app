@@ -1,7 +1,8 @@
 import React from 'react';
 import { Router, Route } from 'react-router-dom';
 import ReduxToastr from 'react-redux-toastr';
-import { Grid, createStyles, withStyles, WithStyles, Theme } from '@material-ui/core';
+import { Grid, Theme } from '@material-ui/core';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
 import jwt_decode from 'jwt-decode';
 
 import setAuthToken from 'Auth/setAuthToken';
@@ -9,7 +10,7 @@ import { PrivateRoute } from 'Auth/PrivateRoute';
 import { history } from 'Utils/history';
 import store from 'Store';
 
-import { setCurrentUser/* , logoutUser */ } from './ActionCreators/Authentication';
+import { setCurrentUser /* , logoutUser */ } from './ActionCreators/Authentication';
 import Header from 'Layout/Header';
 import { Home } from 'Components/Home';
 import { CustomiseExercises } from 'Components/Customise';
@@ -32,20 +33,16 @@ if (localStorage.jwtToken) {
   } */
 }
 
-const styles = (theme: Theme) => createStyles({
-  root: {
-    flexGrow: 1,
-  },
-  paper: {
-    padding: theme.spacing.unit * 2,
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
-});
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1
+    }
+  })
+);
 
-interface Props extends WithStyles<typeof styles> { }
-
-function App({ classes }: Props) {
+export default function App() {
+  const classes = useStyles();
   const getToastr = () => {
     return (
       <ReduxToastr
@@ -58,10 +55,10 @@ function App({ classes }: Props) {
         closeOnToastrClick
       />
     );
-  }
+  };
   return (
     <div className={classes.root}>
-      <Grid container className='App' spacing={24}>
+      <Grid container className='App' spacing={10}>
         <Grid item xs={12}>
           <Router history={history}>
             <Header />
@@ -77,5 +74,3 @@ function App({ classes }: Props) {
     </div>
   );
 }
-
-export default withStyles(styles)(App);

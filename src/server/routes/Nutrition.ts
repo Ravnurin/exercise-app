@@ -28,14 +28,14 @@ router.post('/user/foodItems/add', (req, res) => {
 
   User.findOne({ username }).then((user: any) => {
     const updatedFoodItem = { ...foodItem, id: user.foodItems.length + 1 };
-    console.log("Updated: ", updatedFoodItem);
+    console.log('Updated: ', updatedFoodItem);
 
     User.findOneAndUpdate({ username }, { $push: { foodItems: updatedFoodItem } }, { new: true }, (e, u: any) => {
       const errors = {} as any;
       if (e) {
         return res.status(HttpStatusCode.ClientError).json(e);
       }
-  
+
       if (!u) {
         errors.nutrition = 'Nutrition food items not updated';
         return res.status(HttpStatusCode.ClientError);
@@ -43,7 +43,7 @@ router.post('/user/foodItems/add', (req, res) => {
       return res.json(u.foodItems);
     });
   });
-})
+});
 
 router.post('/user/foodItems/delete', (req, res) => {
   const { foodItemIds } = req.body;
@@ -59,7 +59,7 @@ router.post('/user/foodItems/delete', (req, res) => {
       if (e) {
         return res.status(HttpStatusCode.ClientError).json(e);
       }
-  
+
       if (!u) {
         errors.nutrition = 'User food items not updated';
         return res.status(HttpStatusCode.ClientError);
@@ -67,6 +67,6 @@ router.post('/user/foodItems/delete', (req, res) => {
       return res.json(u.foodItems);
     });
   });
-})
+});
 
 export default router;

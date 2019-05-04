@@ -1,12 +1,5 @@
 import React, { ChangeEvent } from 'react';
-import {
-  Checkbox,
-  TableCell,
-  TableHead,
-  TableRow,
-  TableSortLabel,
-  Tooltip
-} from '@material-ui/core';
+import { Checkbox, TableCell, TableHead, TableRow, TableSortLabel, Tooltip } from '@material-ui/core';
 import { SortDirection } from '@material-ui/core/TableCell';
 
 interface Props {
@@ -23,9 +16,8 @@ const rows = [
   { id: 'calories', align: 'right', disablePadding: false, label: 'Calories' },
   { id: 'fats', align: 'right', disablePadding: false, label: 'Fat (g)' },
   { id: 'carbohydrates', align: 'right', disablePadding: false, label: 'Carbohydrates (g)' },
-  { id: 'protein', align: 'right', disablePadding: false, label: 'Protein (g)' },
+  { id: 'protein', align: 'right', disablePadding: false, label: 'Protein (g)' }
 ];
-
 
 export default function EnhancedTableHead(props: Props) {
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
@@ -33,11 +25,10 @@ export default function EnhancedTableHead(props: Props) {
     onRequestSort(event, property);
   };
 
-
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
+        <TableCell padding='checkbox'>
           <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={numSelected === rowCount && rowCount !== 0}
@@ -48,19 +39,10 @@ export default function EnhancedTableHead(props: Props) {
           <TableCell
             key={row.id}
             align={row.align as 'right'}
-            padding={row.disablePadding ? 'none' : 'default'}
-            sortDirection={orderBy === row.id ? order : false}
-          >
-            <Tooltip
-              title="Sort"
-              placement={row.align ? 'bottom-end' : 'bottom-start'}
-              enterDelay={300}
-            >
-              <TableSortLabel
-                active={orderBy === row.id}
-                direction={order}
-                onClick={createSortHandler(row.id)}
-              >
+            padding={row.disablePadding ? 'none' : 'normal'}
+            sortDirection={orderBy === row.id ? order : false}>
+            <Tooltip title='Sort' placement={row.align ? 'bottom-end' : 'bottom-start'} enterDelay={300}>
+              <TableSortLabel active={orderBy === row.id} direction={order} onClick={createSortHandler(row.id)}>
                 {row.label}
               </TableSortLabel>
             </Tooltip>

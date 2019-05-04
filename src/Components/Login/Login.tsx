@@ -1,12 +1,22 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import React, { MouseEvent, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { Button, Col, Form, FormGroup, Row } from 'reactstrap';
+import {
+  Avatar,
+  Button,
+  CssBaseline,
+  FormControlLabel,
+  Checkbox,
+  Paper,
+  Typography
+} from '@material-ui/core';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
 import { loginUser } from 'ActionCreators/Login';
-import FormInput from 'Components/LayoutElements/FormInput';
 import { ApplicationState } from 'Reducers/index';
 import { SecureUser } from 'Types/User';
+import FormInput from 'Components/LayoutElements/FormInput';
+import useStyles from '../../material/styles';
 
 interface LoginState {
   username: string;
@@ -21,58 +31,65 @@ type Props = OwnProps & RouteComponentProps & ApplicationState;
 type State = LoginState & Partial<ApplicationState>;
 
 function LoginPage(props: Props) {
+  const classes = useStyles();
   const { auth, errors } = props;
-  const [user, setUser] = useState<SecureUser>({
-    username: '',
-    password: ''
-  });
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
-  };
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    props.loginUser(user);
+    props.loginUser({ username, password });
   };
 
-  useEffect(
-    () => {
-      if (auth.isAuthenticated) {
-        props.history.push('/');
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [auth.isAuthenticated]
-  );
+  useEffect(() => {
+    if (auth.isAuthenticated) {
+      props.history.push('/');
+    }
+  }, [auth.isAuthenticated, props.history]);
 
-  const formProps = { errors, onChange: handleChange };
   return (
-    <Row className='justify-content-center'>
-      <Col xs={12} md={4} xl={2}>
-        <Form name='form' onSubmit={handleSubmit}>
+    <main className={classes.main}>
+      <CssBaseline />
+      <Paper className={classes.paper}>
+        <Avatar className={classes.avatar}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component='h1' variant='h5'>
+          Sign in
+        </Typography>
+        <form className={classes.form}>
           <FormInput
-            placeholder='Username'
-            value={user.username}
+            autoFocus
             name='username'
-            {...formProps}
+            onChange={e => setUsername(e.target.value)}
+            placeholder='Username'
+            value={username}
+            errors={errors}
           />
           <FormInput
-            placeholder='Password'
-            value={user.password}
-            type='password'
             name='password'
-            {...formProps}
+            onChange={e => setPassword(e.target.value)}
+            placeholder='Password'
+            type='password'
+            value={password}
+            errors={errors}
           />
-          <FormGroup className='text-center'>
-            <Button color='primary' type='submit'>
-              Login
-            </Button>
-          </FormGroup>
-        </Form>
-      </Col>
-    </Row>
+          <FormControlLabel
+            control={<Checkbox value='remember' color='primary' />}
+            label='Remember me'
+          />
+          <Button
+            type='submit'
+            fullWidth
+            variant='contained'
+            color='primary'
+            onClick={handleSubmit}
+            className={classes.submit}>
+            Sign in
+          </Button>
+        </form>
+      </Paper>
+    </main>
   );
 }
 
@@ -81,4 +98,7 @@ const mapStateToProps = ({ auth, errors }: State) => ({
   errors
 });
 
-export default connect(mapStateToProps, { loginUser })(LoginPage);
+export default connect(
+  mapStateToProps,
+  { loginUser }
+)(LoginPage);

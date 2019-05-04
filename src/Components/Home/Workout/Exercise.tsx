@@ -1,7 +1,12 @@
 import React from 'react';
-import { Col } from 'reactstrap';
+import { Grid } from '@material-ui/core';
 
-import { UpperBodySchema, LowerBodySchema, FriendlyNames, ExerciseSet } from 'Types/Program';
+import {
+  UpperBodySchema,
+  LowerBodySchema,
+  FriendlyNames,
+  ExerciseSet
+} from 'Types/Program';
 import Set, { ModifiedName } from './Set';
 
 export type ExerciseName = keyof (UpperBodySchema & LowerBodySchema);
@@ -26,16 +31,23 @@ export default function Exercise(props: ExerciseProps) {
     if (!s.reps && !s.weight) {
       return null;
     }
-    return <Set key={`${exerciseName}-${i + 1}`} {...props} setIndex={i + 1} stats={stats[exerciseName]} />;
+    return (
+      <Set
+        key={`${exerciseName}-${i + 1}`}
+        {...props}
+        setIndex={i + 1}
+        stats={stats[exerciseName]}
+      />
+    );
   });
 
   return (
-    <Col sm={6} md={6} lg={4} className='mb-3'>
+    <Grid item sm={6} md={6} lg={3}>
       <h4>
         <strong>{FriendlyNames[exerciseName]}</strong>
       </h4>
       <Set {...props} setIndex={0} stats={stats[exerciseName]} />
       {setComponents}
-    </Col>
+    </Grid>
   );
 }

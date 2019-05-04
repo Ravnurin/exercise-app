@@ -10,42 +10,12 @@
     "no-object-literal-type-assertion": false,
     "ordered-imports": false,
     "arrow-parens": [true, "ban-single-arg-parens"],
-    "only-arrow-functions": [
-      true,
-      "allow-declarations",
-      "allow-named-functions"
-    ],
+    "only-arrow-functions": [true, "allow-declarations", "allow-named-functions"],
     "jsx-no-lambda": false,
     "triple-equals": false,
     "newline-per-chained-call": false,
     "jsx-boolean-value": false,
     "no-unused-expression": false
-    /* "no-console": false,
-
-    "member-access": [false, "check-accessor"],
-    "member-ordering": false,
-    "no-var-requires": false,
-    "max-classes-per-file": [true, 2],
-    "quotemark": [true, "single"],
-    "trailing-comma": [
-      true,
-      {
-        "multiline": {
-          "objects": "never",
-          "arrays": "never",
-          "functions": "never",
-          "typeLiterals": "ignore"
-        }
-      }
-    ],
-    "variable-name": [
-      true,
-      "ban-keywords",
-      "check-format",
-      "allow-leading-underscore",
-      "allow-pascal-case",
-      "allow-snake-case"
-    ]*/
   },
   "linterOptions": {
     "exclude": ["config/**/*.js", "node_modules/**/*.ts"]

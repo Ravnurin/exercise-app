@@ -1,9 +1,8 @@
 import React from 'react';
+import { Grid } from '@material-ui/core';
 
 import Exercise, { Names } from './Exercise';
-import { LowerBodySchema } from 'Types/Program';
-import { Row } from 'reactstrap';
-import { FriendlyNames } from '../../../Types/Program';
+import { FriendlyNames, LowerBodySchema } from 'Types/Program';
 
 interface Props {
   onChange: (names: Names, set: string) => void;
@@ -15,16 +14,22 @@ export default function LowerBody({ lowerBody, onChange }: Props) {
     return null;
   }
   const exerciseProps = { onChange, stats: lowerBody };
-  const exercises = Object.keys(FriendlyNames).filter(k => lowerBody[k] != null) as Array<keyof LowerBodySchema>;
+  const exercises = Object.keys(FriendlyNames).filter(
+    k => lowerBody[k] != null
+  ) as Array<keyof LowerBodySchema>;
 
   return (
-    <Row>
-      {exercises.map(key =>
-        <Exercise key={`${lowerBody}-${key}`} exerciseName={key} {...exerciseProps} />
-      )}
-    </Row>
+    <Grid container direction='row'>
+      {exercises.map(key => (
+        <Exercise
+          key={`${lowerBody}-${key}`}
+          exerciseName={key}
+          {...exerciseProps}
+        />
+      ))}
+    </Grid>
   );
-};
+}
 
 export const lowerBodyTemplate = {
   squat: [],

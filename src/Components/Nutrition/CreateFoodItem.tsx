@@ -1,41 +1,34 @@
 import React, { FormEvent } from 'react';
-import {
-  InputAdornment,
-  TextField,
-  Button,
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-  Grid
-} from '@material-ui/core';
+import { InputAdornment, TextField, Button, Grid, Theme } from '@material-ui/core';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { useFormState } from 'react-use-form-state';
-import classNames from 'classnames';
 
 import { FoodItem } from 'Types/Nutrition';
 import { getCalculatedFoodItem } from '../Helpers/NutritionHelpers';
 import { ErrorState } from 'Types/Errors';
 
-const styles = (theme: Theme) => createStyles({
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  margin: {
-    margin: theme.spacing.unit,
-  },
-  textField: {
-    flexBasis: 200,
-  },
-});
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    container: {
+      display: 'flex',
+      flexWrap: 'wrap'
+    },
+    textField: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      with: 200
+    }
+  })
+);
 
-interface Props extends WithStyles<typeof styles> {
+interface Props {
   onSubmit: (foodItem: FoodItem) => void;
   errors: ErrorState;
 }
 
-function CreateFoodItem(props: Props) {
-  const { classes, errors } = props;
+export default function CreateFoodItem(props: Props) {
+  const classes = useStyles();
+  const { errors } = props;
   const [formState, { text, number }] = useFormState<FoodItem>(
     {
       name: '',
@@ -54,10 +47,12 @@ function CreateFoodItem(props: Props) {
   };
 
   const fieldProps = (adornment = true) => ({
-    className: classNames(classes.margin, classes.textField),
-    InputProps: adornment ? {
-      endAdornment: <InputAdornment position="end">Gr</InputAdornment>
-    } : {},
+    className: classes.textField,
+    InputProps: adornment
+      ? {
+          endAdornment: <InputAdornment position="end">Gr</InputAdornment>
+        }
+      : {},
     autoComplete: 'off'
   });
 
@@ -67,8 +62,15 @@ function CreateFoodItem(props: Props) {
     { label: 'Carbohydrates', id: 'carbohydrates', ...fieldProps(), ...number('carbohydrates') },
     { label: 'Fats', id: 'fats', ...fieldProps(), ...number('fats') },
     { label: 'Protein', id: 'protein', ...fieldProps(), ...number('protein') },
-    { label: 'Calories', id: 'calories', ...fieldProps(), ...number('calories'), value: getCalculatedFoodItem(formState.values).calories, disabled: true },
-  ]
+    {
+      label: 'Calories',
+      id: 'calories',
+      ...fieldProps(),
+      ...number('calories'),
+      value: getCalculatedFoodItem(formState.values).calories,
+      disabled: true
+    }
+  ];
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -79,19 +81,29 @@ function CreateFoodItem(props: Props) {
   };
 
   return (
-    <form name='form' onSubmit={handleSubmit} className={classes.root}>
-      <Grid container direction='row' justify='center'>
+    <form name="form" onSubmit={handleSubmit} className={classes.container}>
+      <Grid container direction="row" justify="center">
         {textFields.map(tf => (
           <Grid item key={tf.id} sm={3}>
-            <TextField {...tf} error={errors[tf.id] != null} /* { ...tf.name === 'calories' ? {value: getCalculatedFoodItem(formState.values).calories} : {}} *//>
+            <TextField
+              {...tf}
+              error={
+                errors[tf.id] != null
+              } /* { ...tf.name === 'calories' ? {value: getCalculatedFoodItem(formState.values).calories} : {}} */
+            />
           </Grid>
         ))}
-        <Grid container justify='center'>
-          <Button variant='contained' className={classes.margin} color={formState.values.name === '' ? 'secondary' : 'primary'} type='submit' disabled={formState.values.name === ''}>Save</Button>
+        <Grid container justify="center">
+          <Button
+            variant="contained"
+            style={{ margin: 1 }}
+            color={formState.values.name === '' ? 'secondary' : 'primary'}
+            type="submit"
+            disabled={formState.values.name === ''}>
+            Save
+          </Button>
         </Grid>
       </Grid>
     </form>
   );
 }
-
-export default withStyles(styles)(CreateFoodItem);

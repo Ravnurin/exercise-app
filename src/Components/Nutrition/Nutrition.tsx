@@ -20,7 +20,9 @@ type Props = OwnProps & ApplicationState;
 function Nutrition(props: Props) {
   const [activeView, setActiveView] = useState<View>(View.FoodItemsList);
 
-  const { nutrition: { foodItems } } = props;
+  const {
+    nutrition: { foodItems }
+  } = props;
 
   useEffect(() => {
     props.getUserFoodItems();
@@ -37,18 +39,28 @@ function Nutrition(props: Props) {
 
   const handleChange = (_e: React.ChangeEvent, newView: View) => {
     setActiveView(newView);
-  }
+  };
 
   return (
     <div>
       <Grid container>
-        <Grid container item justify='center'>
+        <Grid container item justify="center">
           <NutritionNavigation onChange={handleChange} value={activeView} />
         </Grid>
       </Grid>
-      <Grid container item alignItems='center' direction='column' justify='center'>
-        {activeView === View.FoodItemsList && <FoodItemsList foodItems={foodItems} handleDelete={handleDelete} />}
-        {activeView === View.CreateFoodItem && <CreateFoodItem onSubmit={handleSubmit} errors={props.errors} />}
+      <Grid
+        container
+        item
+        alignItems="center"
+        direction="column"
+        justify="center"
+      >
+        {activeView === View.FoodItemsList && (
+          <FoodItemsList foodItems={foodItems} handleDelete={handleDelete} />
+        )}
+        {activeView === View.CreateFoodItem && (
+          <CreateFoodItem onSubmit={handleSubmit} errors={props.errors} />
+        )}
       </Grid>
     </div>
   );
@@ -60,7 +72,10 @@ const mapStateToProps = ({ auth, nutrition, errors }: ApplicationState) => ({
   errors
 });
 
-export default connect(mapStateToProps, NutritionActions)(Nutrition);
+export default connect(
+  mapStateToProps,
+  NutritionActions
+)(Nutrition);
 
 /*
 
