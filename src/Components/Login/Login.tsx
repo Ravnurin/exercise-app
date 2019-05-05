@@ -15,7 +15,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { loginUser } from 'ActionCreators/Login';
 import { ApplicationState } from 'Reducers/index';
 import { SecureUser } from 'Types/User';
-import FormInput from 'Components/LayoutElements/FormInput';
+import { Input } from 'Components/LayoutElements/FormElements';
 import useStyles from '../../material/styles';
 
 interface LoginState {
@@ -58,7 +58,7 @@ function LoginPage(props: Props) {
           Sign in
         </Typography>
         <form className={classes.form}>
-          <FormInput
+          <Input
             autoFocus
             name='username'
             onChange={e => setUsername(e.target.value)}
@@ -66,7 +66,7 @@ function LoginPage(props: Props) {
             value={username}
             errors={errors}
           />
-          <FormInput
+          <Input
             name='password'
             onChange={e => setPassword(e.target.value)}
             placeholder='Password'

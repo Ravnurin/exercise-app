@@ -1,13 +1,12 @@
-import React, { FormEvent, useEffect } from 'react';
+import React, { MouseEvent, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Input, Label, Form, Button, FormFeedback } from 'reactstrap';
-import { useFormState } from 'react-use-form-state';
+import { Button, Grid, Typography } from '@material-ui/core';
 
 import * as CustomExerciseActions from 'ActionCreators/CustomExercises';
 import { ApplicationState } from 'Reducers';
 import { getCustomExerciseFriendlyName } from '../Helpers/CustomExerciseHelpers';
-import FormGroup from 'reactstrap/lib/FormGroup';
-import classnames from 'classnames';
+import { TextField } from 'Components/LayoutElements/FormElements';
+import useStyles from 'material/styles';
 
 interface FriendlyNameProps {
   name: string;
@@ -15,15 +14,15 @@ interface FriendlyNameProps {
 }
 
 export const FriendlyName = ({ name, onDelete }: FriendlyNameProps) => (
-  <div>
-    <h5>
-      <strong>
-        {(getCustomExerciseFriendlyName(name))}
-      </strong>
-      <Button className='btn btn-sm btn-danger ml-3' onClick={() => onDelete(name)}>X</Button>
-    </h5>
-  </div>
-)
+  <Grid item xs={12}>
+    <Typography variant='subtitle1' align='center'>
+      {getCustomExerciseFriendlyName(name)}
+      <Button className='btn btn-sm btn-danger ml-3' onClick={() => onDelete(name)}>
+        X
+      </Button>
+    </Typography>
+  </Grid>
+);
 
 interface OwnProps {
   getCustomExercises: () => void;
@@ -33,21 +32,24 @@ interface OwnProps {
 
 type Props = OwnProps & ApplicationState;
 
-function CustomiseExercises({ errors, customExercises, getCustomExercises, addCustomExercise, deleteCustomExercise }: Props) {
-  const [formState, { label, text }] = useFormState<{ customExerciseName: string }>(
-    { customExerciseName: '' },
-    { withIds: true }
-  );
-
+function CustomiseExercises({
+  errors,
+  customExercises,
+  getCustomExercises,
+  addCustomExercise,
+  deleteCustomExercise
+}: Props) {
+  const classes = useStyles();
+  const [exerciseName, setExerciseName] = useState('');
   useEffect(() => {
     getCustomExercises();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    addCustomExercise(formState.values.customExerciseName);
-    (formState.values.customExerciseName as any) = '';
+    addCustomExercise(exerciseName);
+    setExerciseName('');
   };
 
   const handleDelete = (dbName: string) => {
@@ -55,34 +57,50 @@ function CustomiseExercises({ errors, customExercises, getCustomExercises, addCu
   };
 
   return (
-    <Row className='justify-content-center'>
-      <Col xs={12} md={2} className='col-4 mb-5 mx-auto text-center'>
-        <h3>Your saved exercises:</h3>
-        {customExercises.map((customExerciseName, i) =>
-          <FriendlyName key={`${i}-${customExerciseName}`} name={customExerciseName} onDelete={handleDelete} />
-        )}
-      </Col>
-      <Col xs={12}>
-        <Row>
-          <Col sm={6} md={2} className='col-4 mx-auto text-center'>
-            <Form name='form' onSubmit={handleSubmit}>
-              <FormGroup>
-                <Label {...label('customExerciseName')}>Create a new exercise</Label>
-                <Input
-                  {...text('customExerciseName')}
-                  type='text'
-                  placeholder='Exercise Name'
-                  className={classnames({ 'is-invalid': errors.customExerciseName })} />
-                <FormFeedback valid={!errors.customExerciseName}>{errors.customExerciseName}</FormFeedback>
-
-              </FormGroup>
-
-              <Button className='mt-3' color='primary' type='submit' disabled={formState.values.customExerciseName === ''}>Save</Button>
-            </Form>
-          </Col>
-        </Row>
-      </Col>
-    </Row>
+    <>
+      <Typography align='center' variant='h4' color='inherit' gutterBottom>
+        Your saved exercises:
+      </Typography>
+      <Grid container>
+        {customExercises.map((customExerciseName, i) => (
+          <FriendlyName
+            key={`${i}-${customExerciseName}`}
+            name={customExerciseName}
+            onDelete={handleDelete}
+          />
+        ))}
+      </Grid>
+      <form className={classes.form}>
+        <Grid container direction='column' spacing={0}>
+          <Grid container item justify='center'>
+            <Grid item xs={6} md={3}>
+              <TextField
+                required
+                autoFocus
+                value={exerciseName}
+                name='exerciseName'
+                onChange={e => setExerciseName(e.target.value)}
+                errors={errors}
+              />
+            </Grid>
+            <Grid />
+          </Grid>
+          <Grid style={{ textAlign: 'center' }} container item justify='center'>
+            <Grid item xs={4}>
+              <Button
+                type='submit'
+                variant='contained'
+                color='primary'
+                onClick={handleSubmit}
+                className={classes.submit}
+                disabled={exerciseName === ''}>
+                Save
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
+      </form>
+    </>
   );
 }
 
@@ -92,4 +110,7 @@ const mapStateToProps = ({ auth, customExercises, errors }: ApplicationState) =>
   errors
 });
 
-export default connect(mapStateToProps, CustomExerciseActions)(CustomiseExercises);
+export default connect(
+  mapStateToProps,
+  CustomExerciseActions
+)(CustomiseExercises);

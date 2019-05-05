@@ -14,11 +14,7 @@ import UpperBody, { upperBodyTemplate } from './UpperBody';
 import LowerBody, { lowerBodyTemplate } from './LowerBody';
 import { Names } from './Exercise';
 import { getUpdatedExercises } from 'Components/Helpers/HomeHelpers';
-import {
-  ProgramSchemaLayout,
-  UpperBodySchema,
-  LowerBodySchema
-} from 'Types/Program';
+import { ProgramSchemaLayout, UpperBodySchema, LowerBodySchema } from 'Types/Program';
 import { connect } from 'react-redux';
 import { updateUserWorkout } from 'ActionCreators/Exercise';
 import { ApplicationState } from 'Reducers';
@@ -41,12 +37,8 @@ function WorkoutContainer(props: Props) {
   const { exercises } = props;
   const [currentPage, setCurrentPage] = useState<Page>(MuscleGroup.UpperBody);
 
-  const [lowerBodyExercises, setLowerBodyExercises] = useState<LowerBodySchema>(
-    lowerBodyTemplate
-  );
-  const [upperBodyExercises, setUpperBodyExercises] = useState<UpperBodySchema>(
-    upperBodyTemplate
-  );
+  const [lowerBodyExercises, setLowerBodyExercises] = useState<LowerBodySchema>(lowerBodyTemplate);
+  const [upperBodyExercises, setUpperBodyExercises] = useState<UpperBodySchema>(upperBodyTemplate);
 
   useEffect(() => {
     const workout = exercises[exercises.length - 1] || {};
@@ -126,34 +118,25 @@ function WorkoutContainer(props: Props) {
           </RadioGroup>
         </FormControl>
       </Grid>
-      <form className={classes.form}>
-        <Grid item xs={12}>
-          {currentPage === MuscleGroup.UpperBody ? (
-            <UpperBody
-              onChange={handleUpperBodyChange}
-              upperBody={upperBodyExercises}
-            />
-          ) : (
-            <LowerBody
-              onChange={handleLowerBodyChange}
-              lowerBody={lowerBodyExercises}
-            />
-          )}
-        </Grid>
-        {(upperBodyExercises || lowerBodyExercises) && (
-          <Grid container item xs={6} md={3} lg={2} justify='center'>
-            <Button
-              type='submit'
-              fullWidth
-              variant='contained'
-              color='primary'
-              onClick={handleSubmit}
-              className={classes.submit}>
-              Submit
-            </Button>
-          </Grid>
+      <Grid container justify='center'>
+        {currentPage === MuscleGroup.UpperBody ? (
+          <UpperBody onChange={handleUpperBodyChange} upperBody={upperBodyExercises} />
+        ) : (
+          <LowerBody onChange={handleLowerBodyChange} lowerBody={lowerBodyExercises} />
         )}
-      </form>
+      </Grid>
+      {(upperBodyExercises || lowerBodyExercises) && (
+        <Grid container item justify='center'>
+          <Button
+            type='submit'
+            variant='contained'
+            color='primary'
+            onClick={handleSubmit}
+            className={classes.submit}>
+            Submit
+          </Button>
+        </Grid>
+      )}
     </Grid>
   );
 }

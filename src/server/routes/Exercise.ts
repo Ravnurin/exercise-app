@@ -31,31 +31,37 @@ router.post('/user/update', (req, res) => {
       errors.username = 'User not found';
       return res.status(HttpStatusCode.ClientError);
     }
-    const { exercises } = user;
+    const exercises = user.exercises.map((e: any) => e);
+    console.log('length: ', exercises.length);
     const exercise = exercises[exercises.length - 1] || {};
 
-    if (exercise.date && moment(exercise.date).startOf('day').isSame(moment(workout.date).startOf('day'))) {
+    if (
+      exercise.date &&
+      moment(exercise.date)
+        .startOf('day')
+        .isSame(moment(workout.date).startOf('day'))
+    ) {
       exercises[exercises.length - 1] = workout;
     } else {
       exercises.push(workout);
     }
-    user.exercises = exercises;
-    user
-      .save()
-      .then((u: any) => {
-        res.json(u);
-      })
-    /* User.findOneAndUpdate({ username }, updateQuery, { new: true }, (e, u: any) => {
-      if (e) {
-        return res.status(HttpStatusCode.ClientError).json(e);
-      }
 
-      if (!u) {
-        errors.username = 'Exercises not updated';
-        return res.status(HttpStatusCode.ClientError);
+    User.findOneAndUpdate(
+      { username },
+      { $set: { exercises } },
+      { new: true },
+      (e, u: any) => {
+        if (e) {
+          return res.status(HttpStatusCode.ClientError).json(e);
+        }
+
+        if (!u) {
+          errors.username = 'Exercises not updated';
+          return res.status(HttpStatusCode.ClientError);
+        }
+        return res.json(u.exercises);
       }
-      return res.json(u.exercises);
-    }); */
+    );
   });
 });
 

@@ -2,7 +2,7 @@ import React, { useState, ChangeEvent } from 'react';
 import { Checkbox, Paper, Table, TableBody, TableCell, TableRow, Theme } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 
-import { getSorting, stableSort } from '../Helpers/TableHelpers';
+import { getSorting, stableSort } from './Helpers/TableHelpers';
 import { FoodItem } from 'Types/Nutrition';
 import EnhancedTableToolbar from './EnhancedTableToolbar';
 import EnhancedTableHead from './EnhancedTableHead';
@@ -64,7 +64,10 @@ export default function EnhancedTable(props: Props) {
     } else if (selectedIndex === selected.length - 1) {
       newSelected = newSelected.concat(selected.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
     }
 
     setSelected(newSelected);
@@ -77,7 +80,7 @@ export default function EnhancedTable(props: Props) {
       <Paper className={classes.paper}>
         <EnhancedTableToolbar numSelected={selected.length} onDelete={() => onDelete(selected)} />
         <div className={classes.tableWrapper}>
-          <Table className={classes.table} aria-labelledby="tableTitle">
+          <Table className={classes.table} aria-labelledby='tableTitle'>
             <EnhancedTableHead
               numSelected={selected.length}
               order={order}
@@ -93,21 +96,21 @@ export default function EnhancedTable(props: Props) {
                   <TableRow
                     hover
                     onClick={() => handleClick(n.id!)}
-                    role="checkbox"
+                    role='checkbox'
                     aria-checked={isItemSelected}
                     tabIndex={-1}
                     key={n.id}
                     selected={isItemSelected}>
-                    <TableCell padding="checkbox">
+                    <TableCell padding='checkbox'>
                       <Checkbox checked={isItemSelected} />
                     </TableCell>
-                    <TableCell component="th" scope="row" padding="none">
+                    <TableCell component='th' scope='row' padding='none'>
                       {n.name}
                     </TableCell>
-                    <TableCell align="right">{n.calories}</TableCell>
-                    <TableCell align="right">{n.fats}</TableCell>
-                    <TableCell align="right">{n.carbohydrates}</TableCell>
-                    <TableCell align="right">{n.protein}</TableCell>
+                    <TableCell align='right'>{n.calories}</TableCell>
+                    <TableCell align='right'>{n.fats}</TableCell>
+                    <TableCell align='right'>{n.carbohydrates}</TableCell>
+                    <TableCell align='right'>{n.protein}</TableCell>
                   </TableRow>
                 );
               })}

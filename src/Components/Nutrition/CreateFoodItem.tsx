@@ -17,6 +17,9 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
       with: 200
+    },
+    button: {
+      margin: theme.spacing(1)
     }
   })
 );
@@ -50,7 +53,7 @@ export default function CreateFoodItem(props: Props) {
     className: classes.textField,
     InputProps: adornment
       ? {
-          endAdornment: <InputAdornment position="end">Gr</InputAdornment>
+          endAdornment: <InputAdornment position='end'>Gr</InputAdornment>
         }
       : {},
     autoComplete: 'off'
@@ -75,14 +78,17 @@ export default function CreateFoodItem(props: Props) {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const foodItem = { ...formState.values, calories: textFields.filter(t => t.label === 'Calories')[0].value };
+    const foodItem = {
+      ...formState.values,
+      calories: textFields.filter(t => t.label === 'Calories')[0].value
+    };
     props.onSubmit(foodItem);
     clearForm();
   };
 
   return (
-    <form name="form" onSubmit={handleSubmit} className={classes.container}>
-      <Grid container direction="row" justify="center">
+    <form name='form' onSubmit={handleSubmit} className={classes.container}>
+      <Grid container direction='row' justify='center'>
         {textFields.map(tf => (
           <Grid item key={tf.id} sm={3}>
             <TextField
@@ -93,12 +99,12 @@ export default function CreateFoodItem(props: Props) {
             />
           </Grid>
         ))}
-        <Grid container justify="center">
+        <Grid container justify='center'>
           <Button
-            variant="contained"
-            style={{ margin: 1 }}
+            variant='contained'
+            className={classes.button}
             color={formState.values.name === '' ? 'secondary' : 'primary'}
-            type="submit"
+            type='submit'
             disabled={formState.values.name === ''}>
             Save
           </Button>

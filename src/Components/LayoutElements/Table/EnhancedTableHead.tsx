@@ -1,5 +1,12 @@
 import React, { ChangeEvent } from 'react';
-import { Checkbox, TableCell, TableHead, TableRow, TableSortLabel, Tooltip } from '@material-ui/core';
+import {
+  Checkbox,
+  TableCell,
+  TableHead,
+  TableRow,
+  TableSortLabel,
+  Tooltip
+} from '@material-ui/core';
 import { SortDirection } from '@material-ui/core/TableCell';
 
 interface Props {
@@ -39,10 +46,16 @@ export default function EnhancedTableHead(props: Props) {
           <TableCell
             key={row.id}
             align={row.align as 'right'}
-            padding={row.disablePadding ? 'none' : 'normal'}
+            padding={row.disablePadding ? 'none' : 'default'}
             sortDirection={orderBy === row.id ? order : false}>
-            <Tooltip title='Sort' placement={row.align ? 'bottom-end' : 'bottom-start'} enterDelay={300}>
-              <TableSortLabel active={orderBy === row.id} direction={order} onClick={createSortHandler(row.id)}>
+            <Tooltip
+              title='Sort'
+              placement={row.align ? 'bottom-end' : 'bottom-start'}
+              enterDelay={300}>
+              <TableSortLabel
+                active={orderBy === row.id}
+                direction={order}
+                onClick={createSortHandler(row.id)}>
                 {row.label}
               </TableSortLabel>
             </Tooltip>

@@ -44,17 +44,11 @@ function Nutrition(props: Props) {
   return (
     <div>
       <Grid container>
-        <Grid container item justify="center">
+        <Grid container item justify='center'>
           <NutritionNavigation onChange={handleChange} value={activeView} />
         </Grid>
       </Grid>
-      <Grid
-        container
-        item
-        alignItems="center"
-        direction="column"
-        justify="center"
-      >
+      <Grid container item alignItems='center' direction='column' justify='center'>
         {activeView === View.FoodItemsList && (
           <FoodItemsList foodItems={foodItems} handleDelete={handleDelete} />
         )}
@@ -76,21 +70,3 @@ export default connect(
   mapStateToProps,
   NutritionActions
 )(Nutrition);
-
-/*
-
-<Row className='justify-content-center text-center'>
-      <Col xs={12} className='mb-5'>
-        <NutritionNavigation />
-      </Col>
-      <Col xs={12}>
-        <DropdownMenu options={foodItems} />
-      </Col>
-      <Col xs={12}>
-        <Row>
-          <Col sm={6} md={2} className='col-4 mx-auto'>
-            <CreateFoodItem handleSubmit={handleSubmit} />
-          </Col>
-        </Row>
-      </Col>
-    </Row>*/

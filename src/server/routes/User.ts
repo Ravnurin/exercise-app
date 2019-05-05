@@ -29,7 +29,7 @@ router.post('/register', (req, res) => {
       });
     } else {
       const newUser: any = new User({
-        username,
+        username: username.toLowerCase(),
         password
       });
 
@@ -42,11 +42,9 @@ router.post('/register', (req, res) => {
               console.error('There was an error', error);
             } else {
               newUser.password = hash;
-              newUser
-                .save()
-                .then((u: any) => {
-                  res.json(u);
-                });
+              newUser.save().then((u: any) => {
+                res.json(u);
+              });
             }
           });
         }
@@ -72,20 +70,25 @@ router.post('/login', (req, res) => {
 
     bcrypt.compare(password, user.password).then(isMatch => {
       if (isMatch) {
-        const payload = { id: user.id, username }
+        const payload = { id: user.id, username };
 
-        jwt.sign(payload, secret, {
-          expiresIn: 360000
-        }, (err, token) => {
-          if (err) {
-            console.error(`There is some error in token: ${token}`);
-          } else {
-            res.json({
-              success: true,
-              token: `Bearer ${token}`
-            });
+        jwt.sign(
+          payload,
+          secret,
+          {
+            expiresIn: 360000
+          },
+          (err, token) => {
+            if (err) {
+              console.error(`There is some error in token: ${token}`);
+            } else {
+              res.json({
+                success: true,
+                token: `Bearer ${token}`
+              });
+            }
           }
-        });
+        );
       } else {
         errors.password = 'Incorrect password';
         return res.status(HttpStatusCode.ClientError).json(errors);
@@ -94,11 +97,15 @@ router.post('/login', (req, res) => {
   });
 });
 
-router.get('/me', passport.authenticate('jwt', { session: false }), (req, res) => {
-  return res.json({
-    id: req.user.id,
-    username: req.user.username
-  });
-});
+router.get(
+  '/me',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    return res.json({
+      id: req.user.id,
+      username: req.user.username
+    });
+  }
+);
 
 export default router;

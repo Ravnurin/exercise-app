@@ -1,10 +1,16 @@
 import React from 'react';
-import { ProgramSchemaLayout, FriendlyNames, LowerBodySchema, UpperBodySchema } from 'Types/Program';
-import { Row } from 'reactstrap';
-import Exercise from '../Workout/Exercise';
+import Grid from '@material-ui/core/Grid';
 import { connect } from 'react-redux';
-import { ApplicationState } from 'Reducers';
 import moment from 'moment';
+
+import {
+  ProgramSchemaLayout,
+  FriendlyNames,
+  LowerBodySchema,
+  UpperBodySchema
+} from 'Types/Program';
+import Exercise from '../Workout/Exercise';
+import { ApplicationState } from 'Reducers';
 
 interface Props {
   exercises: ProgramSchemaLayout[];
@@ -30,14 +36,23 @@ function WorkoutHistory({ exercises }: Props) {
   }
 
   const history = { ...workout.upperBody, ...workout.lowerBody };
-  const exerciseNames = Object.keys(FriendlyNames).filter(k => history[k] != null && history[k].length > 0) as Array<keyof UpperBodySchema & LowerBodySchema>;
+  const exerciseNames = Object.keys(FriendlyNames).filter(
+    k => history[k] != null && history[k].length > 0
+  ) as Array<keyof UpperBodySchema & LowerBodySchema>;
 
   return (
-    <Row className='justify-content-center'>
-      {exerciseNames.map(key => (
-        <Exercise key={`${history}-${key}`} exerciseName={key} stats={history as any as UpperBodySchema | LowerBodySchema} isHistorySet />
-      ))}
-    </Row>
+    <Grid container justify='center' alignItems='center'>
+      <Grid item xs={12}>
+        {exerciseNames.map(key => (
+          <Exercise
+            key={`${history}-${key}`}
+            exerciseName={key}
+            stats={(history as any) as UpperBodySchema | LowerBodySchema}
+            isHistorySet
+          />
+        ))}
+      </Grid>
+    </Grid>
   );
 }
 
@@ -47,5 +62,7 @@ const mapStateToProps = ({ auth, exercises, errors }: ApplicationState) => ({
   errors
 });
 
-
-export default connect(mapStateToProps, null)(WorkoutHistory);
+export default connect(
+  mapStateToProps,
+  null
+)(WorkoutHistory);

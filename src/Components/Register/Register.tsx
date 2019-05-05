@@ -1,17 +1,11 @@
 import React, { useState, useEffect, MouseEvent } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import {
-  Avatar,
-  Button,
-  CssBaseline,
-  Paper,
-  Typography
-} from '@material-ui/core';
+import { Avatar, Button, CssBaseline, Paper, Typography } from '@material-ui/core';
 import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
 
 import { registerUser } from 'ActionCreators/Register';
-import FormInput from 'Components/LayoutElements/FormInput';
+import { Input } from 'Components/LayoutElements/FormElements';
 import { AuthState } from 'Types/Authentication';
 import { ErrorState } from 'Types/Errors';
 import { ApplicationState } from 'Reducers/index';
@@ -52,7 +46,7 @@ function RegisterPage(props: Props) {
         <Typography component='h1' variant='h5'>
           Register
         </Typography>
-        <FormInput
+        <Input
           autoFocus
           name='username'
           onChange={e => setUsername(e.target.value)}
@@ -60,7 +54,7 @@ function RegisterPage(props: Props) {
           value={username}
           errors={errors}
         />
-        <FormInput
+        <Input
           name='password'
           onChange={e => setPassword(e.target.value)}
           placeholder='Password'
@@ -68,7 +62,7 @@ function RegisterPage(props: Props) {
           value={password}
           errors={errors}
         />
-        <FormInput
+        <Input
           name='passwordConfirm'
           onChange={e => setPasswordConfirm(e.target.value)}
           placeholder='Confirm Password'
