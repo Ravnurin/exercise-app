@@ -63,7 +63,7 @@ export default function EnhancedTableToolbar(props: Props) {
       <div className={classes.actions}>
         {numSelected > 0 ? (
           <Tooltip title='Delete'>
-            <IconButton aria-label='Delete' onClick={onDelete}>
+            <IconButton aria-label='Delete' onClick={() => onDelete()}>
               <DeleteIcon />
             </IconButton>
           </Tooltip>

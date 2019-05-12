@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(3),
       marginRight: theme.spacing(3),
       [theme.breakpoints.up(400 + theme.spacing(5))]: {
-        width: 400,
+        width: 600,
         marginLeft: 'auto',
         marginRight: 'auto'
       }
@@ -39,10 +39,21 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: `${theme.spacing(1)}px 0`
     },
     root: {
-      display: 'flex'
+      display: 'flex',
+      flexWrap: 'wrap'
     },
     inputField: {
       marginBottom: theme.spacing(3)
+    },
+    textField: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      with: 200
+    },
+    container: {
+      marginTop: theme.spacing(3),
+      display: 'flex',
+      flexWrap: 'wrap'
     }
   })
 );

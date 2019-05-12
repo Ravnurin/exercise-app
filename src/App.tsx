@@ -16,9 +16,10 @@ import { Home } from 'Components/Home';
 import { CustomiseExercises } from 'Components/Customise';
 import { Login } from 'Components/Login';
 import { Register } from 'Components/Register';
+import { Nutrition } from 'Components/Nutrition';
+import { Profile } from 'Components/Profile';
 
 import './styles/App.scss';
-import { Nutrition } from 'Components/Nutrition';
 
 if (localStorage.jwtToken) {
   setAuthToken(localStorage.jwtToken);
@@ -58,7 +59,7 @@ export default function App() {
   };
   return (
     <div className={classes.root}>
-      <Grid container className='App' spacing={10}>
+      <Grid container className='App'>
         <Grid item xs={12}>
           <Router history={history}>
             <Header />
@@ -66,6 +67,7 @@ export default function App() {
             <PrivateRoute exact path='/' component={Home} />
             <PrivateRoute exact path='/customise' component={CustomiseExercises} />
             <PrivateRoute exact path='/nutrition' component={Nutrition} />
+            <PrivateRoute exact path='/profile' component={Profile} />
             <Route path='/register' component={Register} />
             <Route path='/login' component={Login} />
           </Router>

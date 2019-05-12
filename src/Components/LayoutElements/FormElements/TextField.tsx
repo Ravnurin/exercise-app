@@ -2,8 +2,10 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 
 import { Props } from './Input';
+import useStyles from 'material/styles';
 
 export default (props: Props) => {
+  const { textField } = useStyles();
   const {
     autoFocus,
     autoComplete,
@@ -14,24 +16,26 @@ export default (props: Props) => {
     name,
     placeholder,
     onChange,
-    required
+    required,
+    fullWidth
   } = props;
 
   return (
     <TextField
-      margin='dense'
-      autoFocus={autoFocus}
-      fullWidth
-      required={required}
-      error={errors[name] != null}
-      id={name}
-      name={name}
-      label={placeholder}
-      onChange={onChange}
-      value={value}
-      type={type}
-      disabled={disabled}
       autoComplete={autoComplete || 'off'}
+      autoFocus={autoFocus}
+      className={textField}
+      disabled={disabled}
+      error={errors[name] != null}
+      fullWidth={fullWidth}
+      id={name}
+      label={placeholder}
+      margin='normal'
+      name={name}
+      onChange={onChange}
+      required={required}
+      type={type}
+      value={value}
     />
   );
 };

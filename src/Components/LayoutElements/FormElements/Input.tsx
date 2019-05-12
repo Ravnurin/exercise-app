@@ -12,6 +12,7 @@ export interface Props {
   name: string;
   required?: boolean;
   type?: 'text' | 'number' | 'password';
+  fullWidth?: boolean;
   errors?: ErrorState;
   onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }
@@ -27,10 +28,15 @@ export default (props: Props) => {
     name,
     placeholder,
     required,
-    onChange
+    onChange,
+    fullWidth = false
   } = props;
   return (
-    <FormControl margin='normal' required fullWidth error={errors[name] != null}>
+    <FormControl
+      margin='normal'
+      required={required}
+      fullWidth={fullWidth}
+      error={errors[name] != null}>
       <InputLabel htmlFor={name}>{placeholder}</InputLabel>
       <Input
         required={required}

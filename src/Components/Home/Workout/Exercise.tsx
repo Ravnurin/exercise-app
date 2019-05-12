@@ -37,7 +37,7 @@ export default function Exercise(props: ExerciseProps) {
   });
 
   return (
-    <Grid item sm={6} md={4} spacing={10}>
+    <Grid item sm={6} md={4}>
       <Typography variant='h6' align='center'>
         {FriendlyNames[exerciseName]}
       </Typography>

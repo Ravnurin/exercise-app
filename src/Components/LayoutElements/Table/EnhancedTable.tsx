@@ -73,12 +73,17 @@ export default function EnhancedTable(props: Props) {
     setSelected(newSelected);
   };
 
+  const handleDelete = () => {
+    onDelete(selected);
+    setSelected([]);
+  };
+
   const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} onDelete={() => onDelete(selected)} />
+        <EnhancedTableToolbar numSelected={selected.length} onDelete={handleDelete} />
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby='tableTitle'>
             <EnhancedTableHead

@@ -15,11 +15,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     textField: {
       marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
       with: 200
     },
     button: {
-      margin: theme.spacing(1)
+      marginTop: theme.spacing(3)
     }
   })
 );

@@ -71,7 +71,7 @@ function CustomiseExercises({
         ))}
       </Grid>
       <form className={classes.form}>
-        <Grid container direction='column' spacing={0}>
+        <Grid container direction='column'>
           <Grid container item justify='center'>
             <Grid item xs={6} md={3}>
               <TextField

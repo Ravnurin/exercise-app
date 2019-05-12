@@ -94,7 +94,7 @@ function WorkoutContainer(props: Props) {
   };
 
   return (
-    <Grid container spacing={0} justify='center' alignItems='center'>
+    <Grid container justify='center' alignItems='center'>
       <Grid item sm={12} style={{ textAlign: 'center' }}>
         <FormControl component='fieldset' className={classes.formControl}>
           <FormLabel component='legend'>Workout Split</FormLabel>

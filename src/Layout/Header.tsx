@@ -2,14 +2,7 @@ import React, { MouseEvent } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import { History } from 'history';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  IconButton,
-  Theme
-} from '@material-ui/core';
+import { AppBar, Toolbar, Typography, Button, IconButton, Theme } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { Menu as MenuIcon } from '@material-ui/icons';
 
@@ -65,6 +58,7 @@ function Header(props: Props) {
       { name: 'Home', props: { to: '/' } },
       { name: 'Customise', props: { to: '/customise' } },
       { name: 'Nutrition', props: { to: '/nutrition' } },
+      { name: 'Profile', props: { to: '/profile' } },
       {
         name: 'Logout',
         props: {
@@ -85,10 +79,7 @@ function Header(props: Props) {
     <div className={classes.root}>
       <AppBar position='static' color='primary'>
         <Toolbar>
-          <IconButton
-            className={classes.menuButton}
-            color='inherit'
-            aria-label='Menu'>
+          <IconButton className={classes.menuButton} color='inherit' aria-label='Menu'>
             <MenuIcon />
           </IconButton>
           <Typography variant='h6' color='inherit' className={classes.title}>

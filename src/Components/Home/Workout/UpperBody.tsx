@@ -1,4 +1,5 @@
 import React from 'react';
+import Grid from '@material-ui/core/Grid';
 
 import Exercise, { Names } from './Exercise';
 import { UpperBodySchema, FriendlyNames } from 'Types/Program';
@@ -19,11 +20,11 @@ export default function UpperBody({ upperBody, onChange }: Props) {
   >;
 
   return (
-    <>
+    <Grid container direction='row'>
       {exerciseNames.map(key => (
         <Exercise key={`${upperBody}-${key}`} exerciseName={key} {...exerciseProps} />
       ))}
-    </>
+    </Grid>
   );
 }
 

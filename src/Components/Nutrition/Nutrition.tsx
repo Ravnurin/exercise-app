@@ -7,7 +7,8 @@ import { ApplicationState } from 'Reducers';
 import { FoodItem } from 'Types/Nutrition';
 import NutritionNavigation, { View } from './NutritionNavigation';
 import CreateFoodItem from './CreateFoodItem';
-import FoodItemsList from './FoodItemsList';
+import EnhancedTable from 'Components/LayoutElements/Table/EnhancedTable';
+import useStyles from 'material/styles';
 
 interface OwnProps {
   getUserFoodItems: () => void;
@@ -17,12 +18,22 @@ interface OwnProps {
 
 type Props = OwnProps & ApplicationState;
 
+interface FoodItemsListProps {
+  foodItems: FoodItem[];
+  handleDelete: (foodItemIds: number[]) => void;
+}
+
+const FoodItemsList = ({ foodItems, handleDelete }: FoodItemsListProps) => (
+  <Grid container direction='row' justify='center'>
+    <EnhancedTable options={foodItems} onDelete={handleDelete} />
+  </Grid>
+);
+
 function Nutrition(props: Props) {
+  const classes = useStyles();
   const [activeView, setActiveView] = useState<View>(View.FoodItemsList);
 
-  const {
-    nutrition: { foodItems }
-  } = props;
+  const { foodItems } = props.nutrition;
 
   useEffect(() => {
     props.getUserFoodItems();
@@ -42,8 +53,8 @@ function Nutrition(props: Props) {
   };
 
   return (
-    <div>
-      <Grid container>
+    <>
+      <Grid container className={classes.container}>
         <Grid container item justify='center'>
           <NutritionNavigation onChange={handleChange} value={activeView} />
         </Grid>
@@ -56,7 +67,7 @@ function Nutrition(props: Props) {
           <CreateFoodItem onSubmit={handleSubmit} errors={props.errors} />
         )}
       </Grid>
-    </div>
+    </>
   );
 }
 

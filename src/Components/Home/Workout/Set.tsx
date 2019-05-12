@@ -43,10 +43,10 @@ export default function Set({
 
   return (
     <Grid container justify='space-evenly' className={classes.inputField}>
-      <Grid item sm={4} spacing={0}>
+      <Grid item sm={4}>
         <Input autoComplete={'off'} placeholder='Reps' value={reps} name='reps' {...inputProps} />
       </Grid>
-      <Grid item sm={4} spacing={0}>
+      <Grid item sm={4}>
         <Input
           autoComplete={'off'}
           placeholder='Weight'
